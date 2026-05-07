@@ -1,0 +1,6 @@
+@MalakaBookFestManagementSystem_TubesKPL_HostAddress = http://localhost:5278
+
+GET {{MalakaBookFestManagementSystem_TubesKPL_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
