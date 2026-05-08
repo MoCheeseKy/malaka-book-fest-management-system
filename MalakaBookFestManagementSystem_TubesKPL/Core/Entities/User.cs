@@ -14,4 +14,4 @@ public class Ticket
     public DateOnly ValidDate { get; set; }
 
     public User User { get; set; } = null!;
-}
+}git 
