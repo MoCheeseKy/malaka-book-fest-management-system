@@ -4,10 +4,6 @@ using MalakaBookFest.Infrastructure.Configuration;
 
 namespace MalakaBookFest.Application.Tables;
 
-/// <summary>
-/// Table-driven price lookup for ticket types. Prices are loaded from runtime
-/// configuration so they can be changed without recompiling the application.
-/// </summary>
 public class TicketPriceTable
 {
     private readonly Dictionary<TicketType, decimal> _priceTable;
