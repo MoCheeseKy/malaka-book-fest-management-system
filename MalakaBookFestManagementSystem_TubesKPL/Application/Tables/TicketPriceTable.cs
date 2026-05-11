@@ -1,13 +1,11 @@
 using MalakaBookFest.Core.Enums;
 using Microsoft.Extensions.Options;
 using MalakaBookFest.Infrastructure.Configuration;
-
 namespace MalakaBookFest.Application.Tables;
 
 public class TicketPriceTable
 {
     private readonly Dictionary<TicketType, decimal> _priceTable;
-
     public TicketPriceTable(IOptions<TicketConfig> options)
     {
         var cfg = options.Value;
