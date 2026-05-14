@@ -2,16 +2,18 @@
 
 namespace MalakaBookFest.Core.Entities;
 
-public class Ticket
+public class User
 {
-    public Guid TicketId { get; set; }
     public Guid UserId { get; set; }
-    public TicketType Type { get; set; } = TicketType.SingleDay;
-    public TicketStatus Status { get; set; } = TicketStatus.Active;
-    public string? QrCode { get; set; }
-    public decimal PricePaid { get; set; }
-    public DateTime PurchasedAt { get; set; } = DateTime.UtcNow;
-    public DateOnly ValidDate { get; set; }
+    public string Email { get; set; } = string.Empty;
+    public string PasswordHash { get; set; } = string.Empty;
+    public string FullName { get; set; } = string.Empty;
+    public UserRole Role { get; set; } = UserRole.Guest;
+    public bool IsActive { get; set; } = true;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    public User User { get; set; } = null!;
+    public ICollection<Ticket> Tickets { get; set; } = [];
+    public ICollection<TalkshowRegistration> TalkshowRegistrations { get; set; } = [];
+    public ICollection<Booth> ManagedBooths { get; set; } = [];
 }
