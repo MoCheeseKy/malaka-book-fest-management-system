@@ -3,7 +3,6 @@ using MalakaBookFest.Infrastructure.Configuration;
 using MalakaBookFest.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
