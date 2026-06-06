@@ -29,6 +29,11 @@ public class TalkshowController : ControllerBase
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<ApiResponse<TalkshowDto>>> GetById(Guid id)
     {
+        if (id == Guid.Empty)
+        {
+            return BadRequest(ApiResponse<object>.Fail("Talkshow id is required."));
+        }
+
         var talkshow = await _talkshowService.GetTalkshowByIdAsync(id);
         return Ok(ApiResponse<TalkshowDto>.Ok(MapToDto(talkshow)));
     }
@@ -58,6 +63,11 @@ public class TalkshowController : ControllerBase
     public async Task<ActionResult<ApiResponse<TalkshowDto>>> Update(
         Guid id, [FromBody] UpdateTalkshowDto dto)
     {
+        if (id == Guid.Empty)
+        {
+            return BadRequest(ApiResponse<object>.Fail("Talkshow id is required."));
+        }
+
         var existing = await _talkshowService.GetTalkshowByIdAsync(id);
 
         existing.Title       = dto.Title       ?? existing.Title;
@@ -76,6 +86,11 @@ public class TalkshowController : ControllerBase
     [Authorize(Roles = "Attendee,Organizer,Admin")]
     public async Task<ActionResult<ApiResponse<object>>> Register(Guid id)
     {
+        if (id == Guid.Empty)
+        {
+            return BadRequest(ApiResponse<object>.Fail("Talkshow id is required."));
+        }
+
         var userId       = GetRequesterId();
         var registration = await _talkshowService.RegisterAttendeeAsync(userId, id);
 
@@ -91,6 +106,11 @@ public class TalkshowController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<ApiResponse<object>>> AdvanceStatus(Guid id)
     {
+        if (id == Guid.Empty)
+        {
+            return BadRequest(ApiResponse<object>.Fail("Talkshow id is required."));
+        }
+
         await _talkshowService.AdvanceTalkshowStatusAsync(id);
         return Ok(ApiResponse<object>.Ok(null!, "Talkshow status advanced successfully."));
     }
