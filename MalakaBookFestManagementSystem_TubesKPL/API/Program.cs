@@ -1,14 +1,30 @@
 using MalakaBookFest.API.Middleware;
+using MalakaBookFest.Application.Common;
 using MalakaBookFest.Infrastructure.Configuration;
 using MalakaBookFest.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var errors = context.ModelState.Values
+                .SelectMany(value => value.Errors)
+                .Select(error => string.IsNullOrWhiteSpace(error.ErrorMessage)
+                    ? "Invalid value."
+                    : error.ErrorMessage);
+
+            var response = ApiResponse<object>.Fail("Validation failed.", errors);
+            return new BadRequestObjectResult(response);
+        };
+    });
 
 builder.Services.AddInfrastructure(builder.Configuration);
 

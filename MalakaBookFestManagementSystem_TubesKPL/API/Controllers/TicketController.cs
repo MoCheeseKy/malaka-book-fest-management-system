@@ -53,6 +53,11 @@ public class TicketController : ControllerBase
     [HttpPost("{id:guid}/cancel")]
     public async Task<ActionResult<ApiResponse<TicketDto>>> Cancel(Guid id)
     {
+        if (id == Guid.Empty)
+        {
+            return BadRequest(ApiResponse<object>.Fail("Ticket id is required."));
+        }
+
         var requesterId = GetRequesterId();
         var ticket      = await _ticketService.CancelTicketAsync(id, requesterId);
         return Ok(ApiResponse<TicketDto>.Ok(MapToDto(ticket), "Ticket cancelled successfully."));
@@ -62,6 +67,11 @@ public class TicketController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<ApiResponse<TicketDto>>> Scan([FromQuery] string qrCode)
     {
+        if (string.IsNullOrWhiteSpace(qrCode))
+        {
+            return BadRequest(ApiResponse<object>.Fail("qrCode is required."));
+        }
+
         var ticket = await _ticketService.ScanTicketAsync(qrCode);
         return Ok(ApiResponse<TicketDto>.Ok(MapToDto(ticket), "Ticket scanned successfully."));
     }

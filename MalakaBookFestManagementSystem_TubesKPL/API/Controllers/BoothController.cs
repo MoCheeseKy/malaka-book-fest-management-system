@@ -30,6 +30,11 @@ public class BoothController : ControllerBase
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<ApiResponse<BoothDto>>> GetById(Guid id)
     {
+        if (id == Guid.Empty)
+        {
+            return BadRequest(ApiResponse<object>.Fail("Booth id is required."));
+        }
+
         var booth = await _boothService.GetBoothByIdAsync(id);
         return Ok(ApiResponse<BoothDto>.Ok(MapToDto(booth)));
     }
@@ -59,6 +64,11 @@ public class BoothController : ControllerBase
     public async Task<ActionResult<ApiResponse<BoothDto>>> Update(
         Guid id, [FromBody] UpdateBoothDto dto)
     {
+        if (id == Guid.Empty)
+        {
+            return BadRequest(ApiResponse<object>.Fail("Booth id is required."));
+        }
+
         var requesterId = GetRequesterId();
         var existing    = await _boothService.GetBoothByIdAsync(id);
 
@@ -75,6 +85,11 @@ public class BoothController : ControllerBase
     [Authorize(Roles = "Organizer,Admin")]
     public async Task<ActionResult<ApiResponse<object>>> Delete(Guid id)
     {
+        if (id == Guid.Empty)
+        {
+            return BadRequest(ApiResponse<object>.Fail("Booth id is required."));
+        }
+
         var requesterId = GetRequesterId();
         await _boothService.DeleteBoothAsync(id, requesterId);
         return Ok(ApiResponse<object>.Ok(null!, "Booth deleted successfully."));
