@@ -1,4 +1,6 @@
 using MalakaBookFest.Application.Common;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Text.Json;
 
@@ -32,11 +34,16 @@ public class ExceptionMiddleware
     {
         var (statusCode, message) = exception switch
         {
-            KeyNotFoundException        => (HttpStatusCode.NotFound, exception.Message),
-            UnauthorizedAccessException => (HttpStatusCode.Forbidden, exception.Message),
-            InvalidOperationException   => (HttpStatusCode.BadRequest, exception.Message),
-            ArgumentException           => (HttpStatusCode.BadRequest, exception.Message),
-            _                           => (HttpStatusCode.InternalServerError, "An unexpected error occurred.")
+            KeyNotFoundException               => (HttpStatusCode.NotFound, exception.Message),
+            UnauthorizedAccessException        => (HttpStatusCode.Forbidden, exception.Message),
+            ValidationException                => (HttpStatusCode.BadRequest, exception.Message),
+            ArgumentNullException              => (HttpStatusCode.BadRequest, exception.Message),
+            ArgumentException                  => (HttpStatusCode.BadRequest, exception.Message),
+            InvalidOperationException          => (HttpStatusCode.BadRequest, exception.Message),
+            DbUpdateConcurrencyException       => (HttpStatusCode.Conflict, "The resource was updated by another process. Please retry."),
+            DbUpdateException                  => (HttpStatusCode.Conflict, "The requested change could not be saved."),
+            OperationCanceledException         => (HttpStatusCode.RequestTimeout, "The request was cancelled."),
+            _                                  => (HttpStatusCode.InternalServerError, "An unexpected error occurred.")
         };
 
         context.Response.ContentType = "application/json";

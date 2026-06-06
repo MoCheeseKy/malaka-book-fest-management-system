@@ -22,6 +22,11 @@ public class BookController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<ApiResponse<IEnumerable<BookDto>>>> GetByBooth(Guid boothId)
     {
+        if (boothId == Guid.Empty)
+        {
+            return BadRequest(ApiResponse<object>.Fail("Booth id is required."));
+        }
+
         var books = await _bookService.GetBooksByBoothAsync(boothId);
         return Ok(ApiResponse<IEnumerable<BookDto>>.Ok(books.Select(MapToDto)));
     }
@@ -31,6 +36,11 @@ public class BookController : ControllerBase
     public async Task<ActionResult<ApiResponse<BookDto>>> AddBook(
         Guid boothId, [FromBody] CreateBookDto dto)
     {
+        if (boothId == Guid.Empty)
+        {
+            return BadRequest(ApiResponse<object>.Fail("Booth id is required."));
+        }
+
         var requesterId = GetRequesterId();
 
         var book = new Book
@@ -53,6 +63,11 @@ public class BookController : ControllerBase
     public async Task<ActionResult<ApiResponse<BookDto>>> UpdateBook(
         Guid boothId, Guid bookId, [FromBody] UpdateBookDto dto)
     {
+        if (boothId == Guid.Empty || bookId == Guid.Empty)
+        {
+            return BadRequest(ApiResponse<object>.Fail("Booth id and book id are required."));
+        }
+
         var requesterId = GetRequesterId();
         var existing    = await _bookService.GetBookByIdAsync(bookId);
 
@@ -71,6 +86,11 @@ public class BookController : ControllerBase
     [Authorize(Roles = "Organizer,Admin")]
     public async Task<ActionResult<ApiResponse<object>>> DeleteBook(Guid boothId, Guid bookId)
     {
+        if (boothId == Guid.Empty || bookId == Guid.Empty)
+        {
+            return BadRequest(ApiResponse<object>.Fail("Booth id and book id are required."));
+        }
+
         var requesterId = GetRequesterId();
         await _bookService.DeleteBookAsync(bookId, requesterId);
         return Ok(ApiResponse<object>.Ok(null!, "Book deleted successfully."));
