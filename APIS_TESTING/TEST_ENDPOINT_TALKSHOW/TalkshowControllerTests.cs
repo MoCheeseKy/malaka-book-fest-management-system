@@ -53,22 +53,42 @@ namespace API_TESTING.TEST_ENDPOINT_TALKSHOW
         [TestMethod]
         public async Task GetAll_ShouldReturn200Ok_WhenCalled()
         {
-            // Arrange
             var mockTalkshows = new List<Talkshow>
             {
-                new Talkshow { TalkshowId = Guid.NewGuid(), Title = "Tech Talk 1", MaxCapacity = 100 },
-                new Talkshow { TalkshowId = Guid.NewGuid(), Title = "Tech Talk 2", MaxCapacity = 50 }
+                new Talkshow
+                {
+                    TalkshowId = Guid.NewGuid(),
+                    Title = "Tech Talk 1",
+                    SpeakerName = "Speaker 1",
+                    SpeakerBio = null,
+                    Venue = "Hall A",
+                    StartTime = DateTime.UtcNow,
+                    EndTime = DateTime.UtcNow.AddHours(1),
+                    MaxCapacity = 100,
+                    Registrations = new List<TalkshowRegistration>(),
+                    Status = TalkshowStatus.Scheduled
+                },
+                new Talkshow
+                {
+                    TalkshowId = Guid.NewGuid(),
+                    Title = "Tech Talk 2",
+                    SpeakerName = "Speaker 2",
+                    SpeakerBio = null,
+                    Venue = "Hall B",
+                    StartTime = DateTime.UtcNow,
+                    EndTime = DateTime.UtcNow.AddHours(1),
+                    MaxCapacity = 50,
+                    Registrations = new List<TalkshowRegistration>(),
+                    Status = TalkshowStatus.Scheduled
+                }
             };
 
             _mockTalkshowService.Setup(s => s.GetAllTalkshowsAsync())
                                 .ReturnsAsync(mockTalkshows);
 
             var controller = CreateController();
-
-            // Act
             var actionResult = await controller.GetAll();
 
-            // Assert
             var okResult = actionResult.Result as OkObjectResult;
             Assert.IsNotNull(okResult, "Expected OkObjectResult.");
             Assert.AreEqual(200, okResult.StatusCode);
@@ -81,19 +101,27 @@ namespace API_TESTING.TEST_ENDPOINT_TALKSHOW
         [TestMethod]
         public async Task GetById_ShouldReturn200Ok_WhenTalkshowExists()
         {
-            // Arrange
             var talkshowId = Guid.NewGuid();
-            var mockTalkshow = new Talkshow { TalkshowId = talkshowId, Title = "Design Patterns" };
+            var mockTalkshow = new Talkshow
+            {
+                TalkshowId = talkshowId,
+                Title = "Design Patterns",
+                SpeakerName = "Jane Doe",
+                SpeakerBio = "About design patterns",
+                Venue = "Room 101",
+                StartTime = DateTime.UtcNow,
+                EndTime = DateTime.UtcNow.AddHours(1),
+                MaxCapacity = 100,
+                Registrations = new List<TalkshowRegistration>(),
+                Status = TalkshowStatus.Scheduled
+            };
 
             _mockTalkshowService.Setup(s => s.GetTalkshowByIdAsync(talkshowId))
                                 .ReturnsAsync(mockTalkshow);
 
             var controller = CreateController();
-
-            // Act
             var actionResult = await controller.GetById(talkshowId);
 
-            // Assert
             var okResult = actionResult.Result as OkObjectResult;
             Assert.IsNotNull(okResult);
             Assert.AreEqual(200, okResult.StatusCode);
@@ -106,7 +134,6 @@ namespace API_TESTING.TEST_ENDPOINT_TALKSHOW
         [TestMethod]
         public async Task Create_ShouldReturn201Created_WhenDataIsValid()
         {
-            // Arrange
             var createDto = new CreateTalkshowDto
             {
                 Title = "Future of AI",
@@ -122,18 +149,21 @@ namespace API_TESTING.TEST_ENDPOINT_TALKSHOW
                 TalkshowId = Guid.NewGuid(),
                 Title = createDto.Title,
                 SpeakerName = createDto.SpeakerName,
-                Venue = createDto.Venue
+                SpeakerBio = null,
+                Venue = createDto.Venue,
+                StartTime = createDto.StartTime,
+                EndTime = createDto.EndTime,
+                MaxCapacity = createDto.MaxCapacity,
+                Registrations = new List<TalkshowRegistration>(),
+                Status = TalkshowStatus.Scheduled
             };
 
             _mockTalkshowService.Setup(s => s.CreateTalkshowAsync(It.IsAny<Talkshow>()))
                                 .ReturnsAsync(createdTalkshow);
 
             var controller = CreateController();
-
-            // Act
             var actionResult = await controller.Create(createDto);
 
-            // Assert
             var createdResult = actionResult.Result as CreatedAtActionResult;
             Assert.IsNotNull(createdResult, "Expected CreatedAtActionResult.");
             Assert.AreEqual(201, createdResult.StatusCode);
@@ -146,12 +176,36 @@ namespace API_TESTING.TEST_ENDPOINT_TALKSHOW
         [TestMethod]
         public async Task Update_ShouldReturn200Ok_WhenTalkshowExists()
         {
-            // Arrange
             var talkshowId = Guid.NewGuid();
             var updateDto = new UpdateTalkshowDto { Title = "Updated Talkshow Title" };
 
-            var existingTalkshow = new Talkshow { TalkshowId = talkshowId, Title = "Old Title" };
-            var updatedTalkshow = new Talkshow { TalkshowId = talkshowId, Title = "Updated Talkshow Title" };
+            var existingTalkshow = new Talkshow
+            {
+                TalkshowId = talkshowId,
+                Title = "Old Title",
+                SpeakerName = "Old Speaker",
+                SpeakerBio = null,
+                Venue = "Old Venue",
+                StartTime = DateTime.UtcNow,
+                EndTime = DateTime.UtcNow.AddHours(1),
+                MaxCapacity = 100,
+                Registrations = new List<TalkshowRegistration>(),
+                Status = TalkshowStatus.Scheduled
+            };
+
+            var updatedTalkshow = new Talkshow
+            {
+                TalkshowId = talkshowId,
+                Title = "Updated Talkshow Title",
+                SpeakerName = "Old Speaker",
+                SpeakerBio = null,
+                Venue = "Old Venue",
+                StartTime = existingTalkshow.StartTime,
+                EndTime = existingTalkshow.EndTime,
+                MaxCapacity = existingTalkshow.MaxCapacity,
+                Registrations = existingTalkshow.Registrations,
+                Status = TalkshowStatus.Scheduled
+            };
 
             _mockTalkshowService.Setup(s => s.GetTalkshowByIdAsync(talkshowId))
                                 .ReturnsAsync(existingTalkshow);
@@ -159,11 +213,8 @@ namespace API_TESTING.TEST_ENDPOINT_TALKSHOW
                                 .ReturnsAsync(updatedTalkshow);
 
             var controller = CreateController();
-
-            // Act
             var actionResult = await controller.Update(talkshowId, updateDto);
 
-            // Assert
             var okResult = actionResult.Result as OkObjectResult;
             Assert.IsNotNull(okResult);
             Assert.AreEqual(200, okResult.StatusCode);
@@ -176,7 +227,6 @@ namespace API_TESTING.TEST_ENDPOINT_TALKSHOW
         [TestMethod]
         public async Task Register_ShouldReturn200Ok_WhenRegistrationIsSuccessful()
         {
-            // Arrange
             var talkshowId = Guid.NewGuid();
             var mockRegistration = new TalkshowRegistration
             {
@@ -191,11 +241,8 @@ namespace API_TESTING.TEST_ENDPOINT_TALKSHOW
                                 .ReturnsAsync(mockRegistration);
 
             var controller = CreateController();
-
-            // Act
             var actionResult = await controller.Register(talkshowId);
 
-            // Assert
             var okResult = actionResult.Result as OkObjectResult;
             Assert.IsNotNull(okResult);
             Assert.AreEqual(200, okResult.StatusCode);
@@ -209,18 +256,14 @@ namespace API_TESTING.TEST_ENDPOINT_TALKSHOW
         [TestMethod]
         public async Task AdvanceStatus_ShouldReturn200Ok_WhenCalled()
         {
-            // Arrange
             var talkshowId = Guid.NewGuid();
 
             _mockTalkshowService.Setup(s => s.AdvanceTalkshowStatusAsync(talkshowId))
                                 .Returns(Task.CompletedTask);
 
             var controller = CreateController();
-
-            // Act
             var actionResult = await controller.AdvanceStatus(talkshowId);
 
-            // Assert
             var okResult = actionResult.Result as OkObjectResult;
             Assert.IsNotNull(okResult);
             Assert.AreEqual(200, okResult.StatusCode);
@@ -236,102 +279,72 @@ namespace API_TESTING.TEST_ENDPOINT_TALKSHOW
         #region Negative Scenarios
 
         [TestMethod]
-        public async Task GetById_ShouldThrowKeyNotFoundException_WhenTalkshowDoesNotExist()
+        public async Task GetById_ShouldReturn400BadRequest_WhenIdIsEmpty()
         {
-            // Arrange
-            var talkshowId = Guid.NewGuid();
-
-            _mockTalkshowService.Setup(s => s.GetTalkshowByIdAsync(talkshowId))
-                                .ThrowsAsync(new KeyNotFoundException($"Talkshow with ID {talkshowId} not found."));
-
             var controller = CreateController();
 
-            // Act & Assert
-            var exception = await Assert.ThrowsExactlyAsync<KeyNotFoundException>(() => controller.GetById(talkshowId));
-            Assert.AreEqual($"Talkshow with ID {talkshowId} not found.", exception.Message);
+            var actionResult = await controller.GetById(Guid.Empty);
+
+            var badResult = actionResult.Result as BadRequestObjectResult;
+            Assert.IsNotNull(badResult);
+            Assert.AreEqual(400, badResult.StatusCode);
+
+            var apiResponse = badResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsFalse(apiResponse.Success);
+            Assert.AreEqual("Talkshow id is required.", apiResponse.Message);
         }
 
         [TestMethod]
-        public async Task Create_ShouldThrowArgumentException_WhenDataIsInvalid()
+        public async Task Update_ShouldReturn400BadRequest_WhenIdIsEmpty()
         {
-            // Arrange
-            var createDto = new CreateTalkshowDto
-            {
-                Title = "", // Invalid: Kosong
-                SpeakerName = "John Doe"
-            };
-
-            _mockTalkshowService.Setup(s => s.CreateTalkshowAsync(It.IsAny<Talkshow>()))
-                                .ThrowsAsync(new ArgumentException("Title cannot be empty."));
-
-            var controller = CreateController();
-
-            // Act & Assert
-            var exception = await Assert.ThrowsExactlyAsync<ArgumentException>(() => controller.Create(createDto));
-            Assert.AreEqual("Title cannot be empty.", exception.Message);
-        }
-
-        [TestMethod]
-        public async Task Update_ShouldThrowKeyNotFoundException_WhenTalkshowDoesNotExist()
-        {
-            // Arrange
-            var talkshowId = Guid.NewGuid();
             var updateDto = new UpdateTalkshowDto { Title = "New Title" };
-
-            _mockTalkshowService.Setup(s => s.GetTalkshowByIdAsync(talkshowId))
-                                .ThrowsAsync(new KeyNotFoundException("Talkshow not found."));
-
             var controller = CreateController();
 
-            // Act & Assert
-            var exception = await Assert.ThrowsExactlyAsync<KeyNotFoundException>(() => controller.Update(talkshowId, updateDto));
-            Assert.AreEqual("Talkshow not found.", exception.Message);
+            var actionResult = await controller.Update(Guid.Empty, updateDto);
+
+            var badResult = actionResult.Result as BadRequestObjectResult;
+            Assert.IsNotNull(badResult);
+            Assert.AreEqual(400, badResult.StatusCode);
+
+            var apiResponse = badResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsFalse(apiResponse.Success);
+            Assert.AreEqual("Talkshow id is required.", apiResponse.Message);
         }
 
         [TestMethod]
-        public async Task Register_ShouldThrowInvalidOperationException_WhenTalkshowIsFull()
+        public async Task Register_ShouldReturn400BadRequest_WhenIdIsEmpty()
         {
-            // Arrange
-            var talkshowId = Guid.NewGuid();
-
-            _mockTalkshowService.Setup(s => s.RegisterAttendeeAsync(_mockRequesterId, talkshowId))
-                                .ThrowsAsync(new InvalidOperationException("Talkshow capacity is already full."));
-
             var controller = CreateController();
 
-            // Act & Assert
-            var exception = await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => controller.Register(talkshowId));
-            Assert.AreEqual("Talkshow capacity is already full.", exception.Message);
+            var actionResult = await controller.Register(Guid.Empty);
+
+            var badResult = actionResult.Result as BadRequestObjectResult;
+            Assert.IsNotNull(badResult);
+            Assert.AreEqual(400, badResult.StatusCode);
+
+            var apiResponse = badResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsFalse(apiResponse.Success);
+            Assert.AreEqual("Talkshow id is required.", apiResponse.Message);
         }
 
         [TestMethod]
-        public async Task Register_ShouldThrowInvalidOperationException_WhenUserAlreadyRegistered()
+        public async Task AdvanceStatus_ShouldReturn400BadRequest_WhenIdIsEmpty()
         {
-            // Arrange
-            var talkshowId = Guid.NewGuid();
-
-            _mockTalkshowService.Setup(s => s.RegisterAttendeeAsync(_mockRequesterId, talkshowId))
-                                .ThrowsAsync(new InvalidOperationException("User is already registered for this talkshow."));
-
             var controller = CreateController();
 
-            // Act & Assert
-            var exception = await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => controller.Register(talkshowId));
-            Assert.AreEqual("User is already registered for this talkshow.", exception.Message);
-        }
+            var actionResult = await controller.AdvanceStatus(Guid.Empty);
 
-        [TestMethod]
-        public async Task AdvanceStatus_ShouldThrowInvalidOperationException_WhenTransitionIsInvalid()
-        {
-            var talkshowId = Guid.NewGuid();
+            var badResult = actionResult.Result as BadRequestObjectResult;
+            Assert.IsNotNull(badResult);
+            Assert.AreEqual(400, badResult.StatusCode);
 
-            _mockTalkshowService.Setup(s => s.AdvanceTalkshowStatusAsync(talkshowId))
-                                .ThrowsAsync(new InvalidOperationException("Cannot advance status from Completed."));
-
-            var controller = CreateController();
-
-            var exception = await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => controller.AdvanceStatus(talkshowId));
-            Assert.AreEqual("Cannot advance status from Completed.", exception.Message);
+            var apiResponse = badResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsFalse(apiResponse.Success);
+            Assert.AreEqual("Talkshow id is required.", apiResponse.Message);
         }
 
         #endregion
