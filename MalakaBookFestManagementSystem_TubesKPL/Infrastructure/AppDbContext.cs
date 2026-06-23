@@ -21,6 +21,8 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        // Enums removed to use HasConversion<string>
+
         modelBuilder.Entity<User>(e =>
         {
             e.ToTable("users");
@@ -29,8 +31,7 @@ public class AppDbContext : DbContext
             e.Property(u => u.Email).HasColumnName("email").HasMaxLength(255).IsRequired();
             e.Property(u => u.PasswordHash).HasColumnName("password_hash").HasMaxLength(512).IsRequired();
             e.Property(u => u.FullName).HasColumnName("full_name").HasMaxLength(255).IsRequired();
-            e.Property(u => u.Role).HasColumnName("role")
-                .HasConversion(new EnumToStringConverter<UserRole>());
+            e.Property(u => u.Role).HasColumnName("role").HasColumnType("user_role").HasConversion<string>();
             e.Property(u => u.IsActive).HasColumnName("is_active");
             e.Property(u => u.CreatedAt).HasColumnName("created_at");
             e.Property(u => u.UpdatedAt).HasColumnName("updated_at");
@@ -46,8 +47,7 @@ public class AppDbContext : DbContext
             e.Property(b => b.BoothName).HasColumnName("booth_name").HasMaxLength(255).IsRequired();
             e.Property(b => b.Description).HasColumnName("description");
             e.Property(b => b.BoothNumber).HasColumnName("booth_number").HasMaxLength(20).IsRequired();
-            e.Property(b => b.Category).HasColumnName("category")
-                .HasConversion(new EnumToStringConverter<BoothCategory>());
+            e.Property(b => b.Category).HasColumnName("category").HasColumnType("booth_category").HasConversion<string>();
             e.Property(b => b.IsActive).HasColumnName("is_active");
             e.Property(b => b.CreatedAt).HasColumnName("created_at");
             e.Property(b => b.UpdatedAt).HasColumnName("updated_at");
@@ -86,8 +86,7 @@ public class AppDbContext : DbContext
             e.Property(t => t.StartTime).HasColumnName("start_time");
             e.Property(t => t.EndTime).HasColumnName("end_time");
             e.Property(t => t.MaxCapacity).HasColumnName("max_capacity");
-            e.Property(t => t.Status).HasColumnName("status")
-                .HasConversion(new EnumToStringConverter<TalkshowStatus>());
+            e.Property(t => t.Status).HasColumnName("status").HasColumnType("talkshow_status").HasConversion<string>();
             e.Property(t => t.CreatedAt).HasColumnName("created_at");
             e.Property(t => t.UpdatedAt).HasColumnName("updated_at");
         });
@@ -98,10 +97,8 @@ public class AppDbContext : DbContext
             e.HasKey(t => t.TicketId);
             e.Property(t => t.TicketId).HasColumnName("ticket_id");
             e.Property(t => t.UserId).HasColumnName("user_id");
-            e.Property(t => t.Type).HasColumnName("type")
-                .HasConversion(new EnumToStringConverter<TicketType>());
-            e.Property(t => t.Status).HasColumnName("status")
-                .HasConversion(new EnumToStringConverter<TicketStatus>());
+            e.Property(t => t.Type).HasColumnName("type").HasColumnType("ticket_type").HasConversion<string>();
+            e.Property(t => t.Status).HasColumnName("status").HasColumnType("ticket_status").HasConversion<string>();
             e.Property(t => t.QrCode).HasColumnName("qr_code").HasMaxLength(512);
             e.Property(t => t.PricePaid).HasColumnName("price_paid").HasColumnType("decimal(12,2)");
             e.Property(t => t.PurchasedAt).HasColumnName("purchased_at");

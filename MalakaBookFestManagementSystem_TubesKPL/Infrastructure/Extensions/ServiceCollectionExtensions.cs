@@ -9,6 +9,8 @@ using MalakaBookFest.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
+using MalakaBookFest.Core.Enums;
 
 namespace MalakaBookFest.Infrastructure.Extensions;
 
@@ -18,8 +20,12 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(configuration.GetConnectionString("DefaultConnection"));
+        dataSourceBuilder.EnableUnmappedTypes();
+        var dataSource = dataSourceBuilder.Build();
+
         services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(dataSource));
 
         services.Configure<JwtConfig>(configuration.GetSection("JwtConfig"));
         services.Configure<TicketConfig>(configuration.GetSection("TicketConfig"));

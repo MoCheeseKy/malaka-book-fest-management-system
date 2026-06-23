@@ -1,0 +1,59 @@
+<Window x:Class="MalakaBookFestManagementSystem_GUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MalakaBookFestManagementSystem_GUI"
+        xmlns:viewmodels="clr-namespace:MalakaBookFestManagementSystem_GUI.ViewModels"
+        xmlns:views="clr-namespace:MalakaBookFestManagementSystem_GUI.Views"
+        mc:Ignorable="d"
+        Title="Malaka Book Fest - GUI" Height="600" Width="900"
+        Style="{StaticResource P3WindowStyle}">
+
+    <Window.DataContext>
+        <viewmodels:MainViewModel />
+    </Window.DataContext>
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewmodels:BoothViewModel}">
+            <views:BoothView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:BookViewModel}">
+            <views:BookView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:TalkshowViewModel}">
+            <views:TalkshowView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:TicketViewModel}">
+            <views:TicketView />
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar Navigation -->
+        <Border Background="{StaticResource P3DarkGrey}">
+            <StackPanel Margin="10,20,10,0">
+                <TextBlock Text="MAIN MENU" FontSize="20" Margin="10,0,0,20" Foreground="{StaticResource P3Cyan}" FontFamily="Segoe UI Black"/>
+                
+                <Button Content="BOOTH" Command="{Binding NavigateToBoothCommand}" Style="{StaticResource P3ButtonStyle}"/>
+                <Button Content="BOOK" Command="{Binding NavigateToBookCommand}" Style="{StaticResource P3ButtonStyle}"/>
+                <Button Content="TALKSHOW" Command="{Binding NavigateToTalkshowCommand}" Style="{StaticResource P3ButtonStyle}"/>
+                <Button Content="TICKET" Command="{Binding NavigateToTicketCommand}" Style="{StaticResource P3ButtonStyle}"/>
+                
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content Area -->
+        <Border Grid.Column="1" Padding="20">
+            <ContentControl Content="{Binding CurrentViewModel}" />
+        </Border>
+
+        <!-- Slanted Decoration Line -->
+        <Polygon Grid.ColumnSpan="2" Points="0,600 900,580 900,600" Fill="{StaticResource P3Cyan}" VerticalAlignment="Bottom" Opacity="0.5" Panel.ZIndex="-1"/>
+    </Grid>
+</Window>

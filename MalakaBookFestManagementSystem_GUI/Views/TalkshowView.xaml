@@ -1,0 +1,81 @@
+<UserControl x:Class="MalakaBookFestManagementSystem_GUI.Views.TalkshowView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MalakaBookFestManagementSystem_GUI.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,0,0,20">
+            <TextBlock Text="TALKSHOW EVENTS" FontSize="32" Foreground="{StaticResource P3Cyan}" FontFamily="Segoe UI Black"/>
+            <Button Content="RELOAD" Command="{Binding LoadTalkshowsCommand}" Style="{StaticResource P3ButtonStyle}" Margin="20,0,0,0" Padding="15,8"/>
+            <TextBlock Text="Loading data..." Margin="15,0,0,0" VerticalAlignment="Center" Foreground="{StaticResource P3White}"
+                       Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}"/>
+        </StackPanel>
+
+        <DataGrid Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Talkshows}" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,0,20,0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
+                <DataGridTextColumn Header="Speaker" Binding="{Binding SpeakerName}" Width="*"/>
+                <DataGridTextColumn Header="Venue" Binding="{Binding Venue}" Width="Auto"/>
+                <DataGridTextColumn Header="Capacity" Binding="{Binding MaxCapacity}" Width="Auto"/>
+                <DataGridTemplateColumn Header="Actions" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="DETAILS" Command="{Binding DataContext.ShowDetailsCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                        CommandParameter="{Binding}" Style="{StaticResource P3ButtonStyle}" Padding="10,5" FontSize="12" Background="#FFB300" Foreground="{StaticResource P3DeepBlue}"/>
+                                <Button Content="EDIT" Command="{Binding DataContext.PrepareEditCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                        CommandParameter="{Binding}" Style="{StaticResource P3ButtonStyle}" Padding="10,5" FontSize="12"/>
+                                <Button Content="DELETE" Command="{Binding DataContext.DeleteTalkshowCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                        CommandParameter="{Binding}" Style="{StaticResource P3DangerButtonStyle}" Padding="10,5" FontSize="12"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Margin="0,20,0,0">
+            <Button Content="+ ADD NEW TALKSHOW" Command="{Binding PrepareAddCommand}" Style="{StaticResource P3SuccessButtonStyle}"/>
+        </StackPanel>
+
+        <!-- Side Form Panel -->
+        <Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Background="{StaticResource P3DarkGrey}" Padding="20" Width="400"
+                Visibility="{Binding IsSidePanelOpen, Converter={StaticResource BoolToVis}}">
+            <StackPanel>
+                <TextBlock Text="{Binding SidePanelTitle}" FontSize="24" Foreground="{StaticResource P3Cyan}" Margin="0,0,0,20" FontFamily="Segoe UI Black"/>
+                
+                <TextBlock Text="Title" Style="{StaticResource P3TextStyle}"/>
+                <TextBox Text="{Binding CurrentTalkshow.Title, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource P3TextBoxStyle}" IsReadOnly="{Binding IsDetailMode}"/>
+                
+                <TextBlock Text="Speaker Name" Style="{StaticResource P3TextStyle}"/>
+                <TextBox Text="{Binding CurrentTalkshow.SpeakerName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource P3TextBoxStyle}" IsReadOnly="{Binding IsDetailMode}"/>
+                
+                <TextBlock Text="Venue" Style="{StaticResource P3TextStyle}"/>
+                <TextBox Text="{Binding CurrentTalkshow.Venue, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource P3TextBoxStyle}" IsReadOnly="{Binding IsDetailMode}"/>
+
+                <TextBlock Text="Max Capacity" Style="{StaticResource P3TextStyle}"/>
+                <TextBox Text="{Binding CurrentTalkshow.MaxCapacity, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource P3TextBoxStyle}" IsReadOnly="{Binding IsDetailMode}"/>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                    <Button Content="CLOSE" Command="{Binding CloseSidePanelCommand}" Style="{StaticResource P3DangerButtonStyle}"/>
+                    <Button Content="SAVE" Command="{Binding SaveTalkshowCommand}" Style="{StaticResource P3SuccessButtonStyle}"
+                            Visibility="{Binding IsNotDetailMode, Converter={StaticResource BoolToVis}}"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

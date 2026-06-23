@@ -1,9 +1,11 @@
+using NpgsqlTypes;
+
 namespace MalakaBookFest.Core.Enums;
 
 public enum UserRole
 {
-    Guest,
-    Attendee,
-    Organizer,
-    Admin
+    [PgName("Guest")] Guest,
+    [PgName("Attendee")] Attendee,
+    [PgName("Organizer")] Organizer,
+    [PgName("Admin")] Admin
 }

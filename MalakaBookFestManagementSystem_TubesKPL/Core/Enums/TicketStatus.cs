@@ -1,9 +1,11 @@
+using NpgsqlTypes;
+
 namespace MalakaBookFest.Core.Enums;
 
 public enum TicketStatus
 {
-    Active,
-    Used,
-    Cancelled,
-    Expired
+    [PgName("Active")] Active,
+    [PgName("Used")] Used,
+    [PgName("Cancelled")] Cancelled,
+    [PgName("Expired")] Expired
 }
