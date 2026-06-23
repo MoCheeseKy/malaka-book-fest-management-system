@@ -21,6 +21,8 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.HasPostgresEnum<UserRole>("user_role");
+
         modelBuilder.Entity<User>(e =>
         {
             e.ToTable("users");
@@ -29,8 +31,7 @@ public class AppDbContext : DbContext
             e.Property(u => u.Email).HasColumnName("email").HasMaxLength(255).IsRequired();
             e.Property(u => u.PasswordHash).HasColumnName("password_hash").HasMaxLength(512).IsRequired();
             e.Property(u => u.FullName).HasColumnName("full_name").HasMaxLength(255).IsRequired();
-            e.Property(u => u.Role).HasColumnName("role")
-                .HasConversion(new EnumToStringConverter<UserRole>());
+            e.Property(u => u.Role).HasColumnName("role");
             e.Property(u => u.IsActive).HasColumnName("is_active");
             e.Property(u => u.CreatedAt).HasColumnName("created_at");
             e.Property(u => u.UpdatedAt).HasColumnName("updated_at");

@@ -1,0 +1,167 @@
+<UserControl x:Class="MalakaBookFestManagement_GUI.Views.TicketsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Title & Progress -->
+            <RowDefinition Height="*"/>    <!-- Content Split -->
+        </Grid.RowDefinitions>
+
+        <ProgressBar Style="{StaticResource P3RProgressBarStyle}" IsIndeterminate="True" 
+                     Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                     VerticalAlignment="Top" Margin="0,-15,0,15"/>
+
+        <!-- Title -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="TICKETING SYSTEM" Foreground="White" FontSize="26" FontWeight="Bold" Margin="0,0,0,5"/>
+            <TextBlock Text="Purchase entry tickets, check ticket statuses, or scan tickets (Admin)." Foreground="{StaticResource SecondaryTextBrush}" FontSize="12"/>
+        </StackPanel>
+
+        <!-- Main Grid split -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/> <!-- Purchased Tickets Grid -->
+                <ColumnDefinition Width="30"/>  <!-- Gap -->
+                <ColumnDefinition Width="2*"/> <!-- Forms Panel -->
+            </Grid.ColumnDefinitions>
+
+            <!-- LEFT: Purchased tickets list -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/> <!-- Row actions (e.g. Cancel Selected) -->
+                    <RowDefinition Height="*"/>    <!-- DataGrid -->
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
+                    <Button Content="CANCEL SELECTED TICKET" Height="32" Padding="15,0" 
+                            Style="{StaticResource P3RDangerButtonStyle}" 
+                            Command="{Binding CancelCommand}"/>
+                    <Button Content="REFRESH LIST" Height="32" Padding="15,0" Margin="10,0,0,0"
+                            Style="{StaticResource P3RSecondaryButtonStyle}" 
+                            Command="{Binding LoadTicketsCommand}"/>
+                </StackPanel>
+
+                <!-- DataGrid -->
+                <DataGrid Grid.Row="1" Style="{StaticResource P3RDataGridStyle}" 
+                          ItemsSource="{Binding Tickets}" 
+                          SelectedItem="{Binding SelectedTicket}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="TICKET TYPE" Binding="{Binding Type}" Width="1.2*"/>
+                        <DataGridTextColumn Header="VALID DATE" Binding="{Binding ValidDate, StringFormat='yyyy-MM-dd'}" Width="1.2*"/>
+                        <DataGridTextColumn Header="STATUS" Binding="{Binding Status}" Width="*"/>
+                        <DataGridTextColumn Header="PRICE PAID" Binding="{Binding PricePaid, StringFormat='Rp {0:N0}'}" Width="1.2*"/>
+                        <DataGridTextColumn Header="QR CODE" Binding="{Binding QrCode}" Width="2*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <!-- RIGHT: Actions forms panel -->
+            <StackPanel Grid.Column="2">
+                <!-- FORM 1: Purchase Ticket -->
+                <Border Background="{StaticResource GlassBgBrush}" BorderBrush="#1A2F4C" BorderThickness="1" CornerRadius="8" Padding="25" Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="PURCHASE TICKET" Foreground="{StaticResource AccentBrush}" FontSize="14" FontWeight="Bold" Margin="0,0,0,20" />
+
+                        <!-- Ticket Type -->
+                        <TextBlock Text="TICKET TYPE" Foreground="{StaticResource SecondaryTextBrush}" FontSize="10" FontWeight="Bold" Margin="0,0,0,5" />
+                        <ComboBox Height="32" Style="{StaticResource P3RComboBoxStyle}" 
+                                  ItemsSource="{Binding TicketTypes}" 
+                                  SelectedItem="{Binding SelectedType}" 
+                                  Margin="0,0,0,15"/>
+
+                        <!-- Valid Date -->
+                        <TextBlock Text="VALID DATE" Foreground="{StaticResource SecondaryTextBrush}" FontSize="10" FontWeight="Bold" Margin="0,0,0,5" />
+                        <!-- Dark theme DatePicker styling or simple text date selection -->
+                        <DatePicker Height="32" SelectedDate="{Binding ValidDate}" Margin="0,0,0,20" Foreground="White">
+                            <DatePicker.Resources>
+                                <Style TargetType="DatePickerTextBox">
+                                    <Setter Property="Background" Value="#162C4E"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                </Style>
+                            </DatePicker.Resources>
+                        </DatePicker>
+
+                        <!-- Purchase Status messages -->
+                        <TextBlock Text="{Binding StatusMessage}" FontSize="11" Margin="0,0,0,15" TextWrapping="Wrap" HorizontalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{StaticResource DangerBrush}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSuccessMessage}" Value="True">
+                                            <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <!-- Purchase Button -->
+                        <Button Content="PURCHASE NOW" Height="38" Style="{StaticResource P3RPrimaryButtonStyle}" Command="{Binding PurchaseCommand}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- FORM 2: Admin Scan Panel (Visible only if Admin) -->
+                <Border Background="{StaticResource GlassBgBrush}" BorderBrush="#1A2F4C" BorderThickness="1" CornerRadius="8" Padding="25"
+                        Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel>
+                        <TextBlock Text="VERIFY / SCAN TICKET" Foreground="{StaticResource AccentBrush}" FontSize="14" FontWeight="Bold" Margin="0,0,0,20" />
+
+                        <!-- QR Code String Input -->
+                        <TextBlock Text="QR CODE VALUE" Foreground="{StaticResource SecondaryTextBrush}" FontSize="10" FontWeight="Bold" Margin="0,0,0,5" />
+                        <TextBox Height="32" Style="{StaticResource P3RTextBoxStyle}" Text="{Binding QrCodeInput, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+
+                        <!-- Scan Action Button -->
+                        <Button Content="VERIFY TICKET" Height="36" Style="{StaticResource P3RPrimaryButtonStyle}" Command="{Binding ScanCommand}" Margin="0,0,0,15"/>
+
+                        <!-- Scan Output Info -->
+                        <TextBlock Text="{Binding ScanResult}" TextWrapping="Wrap" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <!-- Scanned Ticket Details (if verified) -->
+                        <Border BorderBrush="#1A2F4C" BorderThickness="1" Background="#0C1D36" CornerRadius="4" Padding="12"
+                                Visibility="{Binding ScannedTicket, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel>
+                                <TextBlock Text="VERIFIED INFO:" Foreground="{StaticResource AccentBrush}" FontSize="10" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Type: " Foreground="{StaticResource SecondaryTextBrush}" FontSize="11" Margin="0,0,5,3"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ScannedTicket.Type}" Foreground="White" FontSize="11" FontWeight="Bold" Margin="0,0,0,3"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Valid: " Foreground="{StaticResource SecondaryTextBrush}" FontSize="11" Margin="0,0,5,3"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ScannedTicket.ValidDate, StringFormat='yyyy-MM-dd'}" Foreground="White" FontSize="11" Margin="0,0,0,3"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Status: " Foreground="{StaticResource SecondaryTextBrush}" FontSize="11" Margin="0,0,5,0"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ScannedTicket.Status}" Foreground="{StaticResource AccentBrush}" FontSize="11" FontWeight="Bold"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

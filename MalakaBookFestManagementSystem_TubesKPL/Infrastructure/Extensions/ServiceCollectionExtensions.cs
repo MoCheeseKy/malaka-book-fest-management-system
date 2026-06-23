@@ -1,6 +1,7 @@
 using MalakaBookFest.Application.Services;
 using MalakaBookFest.Application.Tables;
 using MalakaBookFest.Core.Entities;
+using MalakaBookFest.Core.Enums;
 using MalakaBookFest.Core.Interfaces.Repositories;
 using MalakaBookFest.Core.Interfaces.Services;
 using MalakaBookFest.Infrastructure.Configuration;
@@ -9,6 +10,7 @@ using MalakaBookFest.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 
 namespace MalakaBookFest.Infrastructure.Extensions;
 
@@ -18,8 +20,13 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+        dataSourceBuilder.MapEnum<UserRole>("user_role");
+        var dataSource = dataSourceBuilder.Build();
+
         services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(dataSource));
 
         services.Configure<JwtConfig>(configuration.GetSection("JwtConfig"));
         services.Configure<TicketConfig>(configuration.GetSection("TicketConfig"));

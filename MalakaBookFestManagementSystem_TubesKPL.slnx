@@ -1,4 +1,7 @@
 <Solution>
-  <Project Path="APIS_TESTING/APIS_TESTING.csproj" Id="791e8e13-2410-454a-9b58-b036e16fda02" />
+  <Project Path="APIS_TESTING/APIS_TESTING.csproj" Id="791e8e13-2410-454a-9b58-b036e16fda02">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
   <Project Path="MalakaBookFestManagementSystem_TubesKPL/MalakaBookFestManagementSystem_TubesKPL.csproj" />
+  <Project Path="MalakaBookFestManagement_GUI/MalakaBookFestManagement_GUI.csproj" Id="c3a2d0af-7862-4f59-8908-aa16572a1fb6" />
 </Solution>
