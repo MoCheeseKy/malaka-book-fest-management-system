@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="APIS_TESTING/APIS_TESTING.csproj" Id="791e8e13-2410-454a-9b58-b036e16fda02" />
+  <Project Path="GUI/GUI.csproj" Id="fd7328e2-7fb1-428b-b437-8dc910c5b04b" />
   <Project Path="MalakaBookFestManagementSystem_TubesKPL/MalakaBookFestManagementSystem_TubesKPL.csproj" />
 </Solution>

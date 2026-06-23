@@ -1,0 +1,85 @@
+<UserControl x:Class="GUI.Views.BoothView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GUI.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <!-- MAIN VIEW -->
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- HEADER -->
+            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="BOOTH MANAGEMENT" FontSize="26" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,5"/>
+                    <TextBlock Text="Kelola daftar peserta booth pameran, nomor lokasi, dan detail kategori." Foreground="{StaticResource MutedTextBrush}"/>
+                </StackPanel>
+                <Button Grid.Column="1" Content="+ ADD NEW BOOTH" Click="AddBooth_Click" VerticalAlignment="Center" Padding="25,12" />
+            </Grid>
+
+            <!-- DATA TABLE -->
+            <Border Grid.Row="1" Style="{StaticResource CardStyle}">
+                <DataGrid x:Name="BoothDataGrid" SelectionChanged="BoothDataGrid_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding BoothName}" Width="*" />
+                        <DataGridTextColumn Header="Number" Binding="{Binding BoothNumber}" Width="80" />
+                        <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="150" />
+                        <DataGridTextColumn Header="Active" Binding="{Binding IsActive, Converter={StaticResource BoolToStatus}}" Width="80" />
+                        <DataGridTemplateColumn Header="Actions" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Content="VIEW BOOKS" Style="{StaticResource ActionButton}" Click="ViewBooksButton_Click" Tag="{Binding}" />
+                                        <Button Content="EDIT" Style="{StaticResource ActionButton}" Click="EditBooth_Click" Tag="{Binding}" />
+                                        <Button Content="DELETE" Style="{StaticResource ActionDangerButton}" Click="DeleteButton_Click" Tag="{Binding}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+
+        <!-- OVERLAY MODAL -->
+        <Grid x:Name="ModalOverlay" Background="#A0000000" Visibility="Collapsed" Panel.ZIndex="100">
+            <Border Style="{StaticResource CardStyle}" Width="500" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="30">
+                <StackPanel>
+                    <TextBlock x:Name="ModalTitle" Text="ADD BOOTH" FontSize="20" FontWeight="Bold" Foreground="{StaticResource SecondaryAccentBrush}" Margin="0,0,0,20"/>
+
+                    <TextBlock Text="Booth Name" Margin="0,0,0,5" Foreground="{StaticResource MutedTextBrush}"/>
+                    <TextBox x:Name="TxtBoothName" Margin="0,0,0,15" />
+
+                    <TextBlock Text="Booth Number" Margin="0,0,0,5" Foreground="{StaticResource MutedTextBrush}"/>
+                    <TextBox x:Name="TxtBoothNumber" Margin="0,0,0,15" />
+
+                    <TextBlock Text="Category" Margin="0,0,0,5" Foreground="{StaticResource MutedTextBrush}"/>
+                    <ComboBox x:Name="CmbCategory" Margin="0,0,0,15" />
+
+                    <TextBlock Text="Description" Margin="0,0,0,5" Foreground="{StaticResource MutedTextBrush}"/>
+                    <TextBox x:Name="TxtDescription" Height="80" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,25" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="CANCEL" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" Click="CloseModal_Click" />
+                        <Button x:Name="BtnSaveModal" Grid.Column="1" Content="SAVE BOOTH" Margin="10,0,0,0" Click="SaveButton_Click" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,93 @@
+<UserControl x:Class="GUI.Views.TicketView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GUI.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1.2*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Side: Scanner & Details -->
+        <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,20,0">
+            <StackPanel>
+                <TextBlock Text="TICKET SCANNER" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SecondaryAccentBrush}" Margin="0,0,0,20"/>
+
+                <TextBlock Text="Scan QR Code / Enter Data" Margin="0,0,0,5" Foreground="{StaticResource MutedTextBrush}"/>
+                <TextBox x:Name="TxtQrCode" Margin="0,0,0,15" />
+                
+                <Button Content="SCAN TICKET" Click="ScanButton_Click" Margin="0,0,0,30"/>
+
+                <!-- Scan Results area -->
+                <Border x:Name="ScanResultPanel" Background="{StaticResource PanelLightBrush}" CornerRadius="8" Padding="15" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Text="SCAN RESULT" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,10" />
+                        <TextBlock x:Name="TxtResultStatus" FontSize="16" FontWeight="Bold" Foreground="#00FF00" Margin="0,0,0,15" />
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Type:" Foreground="{StaticResource MutedTextBrush}" Margin="0,0,10,5"/>
+                            <TextBlock x:Name="TxtResultType" Grid.Row="0" Grid.Column="1" FontWeight="Bold" Margin="0,0,0,5"/>
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Date:" Foreground="{StaticResource MutedTextBrush}" Margin="0,0,10,5"/>
+                            <TextBlock x:Name="TxtResultDate" Grid.Row="1" Grid.Column="1" FontWeight="Bold" Margin="0,0,0,5"/>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Price:" Foreground="{StaticResource MutedTextBrush}" Margin="0,0,10,0"/>
+                            <TextBlock x:Name="TxtResultPrice" Grid.Row="2" Grid.Column="1" FontWeight="Bold" Margin="0,0,0,0"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+
+        <!-- Right Side: Ticket Plans -->
+        <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
+                    <TextBlock Text="AVAILABLE TICKET PLANS" FontSize="20" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <!-- Pricing Cards will be generated dynamically or bound here -->
+                    <ItemsControl x:Name="TicketPricesList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource PanelLightBrush}" CornerRadius="10" Margin="0,0,0,15" Padding="20">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Key}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextBrush}" Margin="0,0,0,5" />
+                                            <TextBlock Text="Valid for festival entry." Foreground="{StaticResource MutedTextBrush}" FontSize="12" />
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="1" Text="{Binding Value, StringFormat=C}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource SecondaryAccentBrush}" VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
