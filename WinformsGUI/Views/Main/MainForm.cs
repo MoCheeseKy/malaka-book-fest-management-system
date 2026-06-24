@@ -134,6 +134,8 @@ namespace WinformsGUI.Views.Main
 
             this.Controls.Add(this.pnlContent);
             this.Controls.Add(this.pnlSidebar);
+
+            this.Load += (s, e) => ShowFormInContent(new DashboardHomeForm());
         }
 
         private void SetupNavButton(Button btn, string text, int y, EventHandler click)

@@ -15,6 +15,7 @@ namespace WinformsGUI.Views.Ticket
         private Label         lblTitle;
         private Label         lblDescription;
         private RoundedButton btnRefresh;
+        private WinformsGUI.Controls.SearchBar txtSearch;
         private Panel         pnlDivider;
 
         // Grid + Scan card
@@ -28,6 +29,7 @@ namespace WinformsGUI.Views.Ticket
         private Label         lblScanResult;
 
         private TicketService _ticketService;
+        private System.Collections.Generic.List<TicketResponse> _allTickets = new();
 
         private const int M      = Theme.SpaceLG;
         private const int TitleH = 36;
@@ -45,6 +47,7 @@ namespace WinformsGUI.Views.Ticket
             this.lblTitle         = new Label();
             this.lblDescription   = new Label();
             this.btnRefresh       = new RoundedButton();
+            this.txtSearch        = new WinformsGUI.Controls.SearchBar();
             this.pnlDivider       = new Panel();
             this.dgvTickets       = new DataGridView();
             this.pnlScanCard      = new Panel();
@@ -78,6 +81,11 @@ namespace WinformsGUI.Views.Ticket
             this.btnRefresh.CornerRadius = Theme.RadiusButton;
             Theme.ApplyToSecondaryButton(this.btnRefresh);
             this.btnRefresh.Click       += BtnRefresh_Click;
+
+            // ── Search Bar ──────────────────────────────────────────────────
+            this.txtSearch.Size          = new Size(250, 42);
+            this.txtSearch.PlaceholderText = "Cari tiket...";
+            this.txtSearch.TextChangedEvent += TxtSearch_TextChanged;
 
             this.pnlDivider.BackColor = Theme.BorderSoft;
             this.pnlDivider.Size      = new Size(10, 1);
@@ -140,7 +148,7 @@ namespace WinformsGUI.Views.Ticket
             Theme.ApplyToDataGridView(this.dgvTickets);
 
             this.Controls.AddRange(new Control[] {
-                lblTitle, lblDescription, btnRefresh, pnlDivider, pnlScanCard, dgvTickets
+                lblTitle, lblDescription, txtSearch, btnRefresh, pnlDivider, pnlScanCard, dgvTickets
             });
 
             this.Resize += (s, e) => RepositionControls();
@@ -161,6 +169,8 @@ namespace WinformsGUI.Views.Ticket
 
             this.btnRefresh.Location = new Point(w - M - btnRefresh.Width,
                                                  rowY + (headerBlockH - btnRefresh.Height) / 2);
+            this.txtSearch.Location  = new Point(btnRefresh.Left - Theme.SpaceLG - txtSearch.Width,
+                                                 rowY + (headerBlockH - txtSearch.Height) / 2);
 
             int divY = rowY + headerBlockH + Theme.SpaceSM;
             this.pnlDivider.Location = new Point(M, divY);
@@ -183,14 +193,37 @@ namespace WinformsGUI.Views.Ticket
         {
             try
             {
-                var tickets = await _ticketService.GetMyTicketsAsync();
-                dgvTickets.DataSource = tickets;
+                _allTickets = await _ticketService.GetMyTicketsAsync();
+                FilterData();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading tickets: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void FilterData()
+        {
+            if (_allTickets == null) return;
+            var q = txtSearch.Text.Trim().ToLower();
+            if (string.IsNullOrEmpty(q))
+                dgvTickets.DataSource = _allTickets;
+            else
+            {
+                var filtered = new System.Collections.Generic.List<TicketResponse>();
+                foreach (var t in _allTickets)
+                {
+                    if ((t.TicketType != null && t.TicketType.ToLower().Contains(q)) || 
+                        (t.Id.ToString().ToLower().Contains(q)))
+                    {
+                        filtered.Add(t);
+                    }
+                }
+                dgvTickets.DataSource = filtered;
+            }
+        }
+
+        private void TxtSearch_TextChanged(object? sender, EventArgs e) => FilterData();
 
         private void BtnRefresh_Click(object? sender, EventArgs e) => LoadData();
 

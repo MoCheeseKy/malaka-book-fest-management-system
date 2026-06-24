@@ -23,6 +23,8 @@ namespace WinformsGUI.Views.Talkshow
 
         private TalkshowService _talkshowService;
         private bool            _columnsInitialized;
+        private WinformsGUI.Controls.SearchBar txtSearch;
+        private System.Collections.Generic.List<TalkshowResponse> _allTalkshows = new();
 
         private const int M       = Theme.SpaceLG;
         private const int TitleH  = 36;
@@ -49,6 +51,7 @@ namespace WinformsGUI.Views.Talkshow
             this.lblDescription = new Label();
             this.btnRefresh     = new RoundedButton();
             this.btnAdd         = new RoundedButton();
+            this.txtSearch      = new WinformsGUI.Controls.SearchBar();
             this.pnlDivider     = new Panel();
             this.dgvTalkshows   = new DataGridView();
 
@@ -85,6 +88,11 @@ namespace WinformsGUI.Views.Talkshow
             Theme.ApplyToButton(this.btnAdd);
             this.btnAdd.Click       += BtnAdd_Click;
 
+            // ── Search Bar ──────────────────────────────────────────────────
+            this.txtSearch.Size          = new Size(250, 42);
+            this.txtSearch.PlaceholderText = "Cari talkshow...";
+            this.txtSearch.TextChangedEvent += TxtSearch_TextChanged;
+
             // ── Divider ─────────────────────────────────────────────────────
             this.pnlDivider.BackColor = Theme.BorderSoft;
             this.pnlDivider.Size      = new Size(10, 1);
@@ -98,7 +106,7 @@ namespace WinformsGUI.Views.Talkshow
             this.dgvTalkshows.CellFormatting += DgvTs_CellFormatting;
 
             this.Controls.AddRange(new Control[] {
-                lblTitle, lblDescription, btnRefresh, btnAdd, pnlDivider, dgvTalkshows
+                lblTitle, lblDescription, txtSearch, btnRefresh, btnAdd, pnlDivider, dgvTalkshows
             });
 
             this.Resize += (s, e) => RepositionControls();
@@ -129,6 +137,7 @@ namespace WinformsGUI.Views.Talkshow
             this.btnAdd.Location     = new Point(w - M - btnAdd.Width, btnY);
             this.btnRefresh.Location = new Point(btnAdd.Left - Theme.SpaceSM - btnRefresh.Width,
                                                  btnY + (BtnH - btnRefresh.Height) / 2);
+            this.txtSearch.Location  = new Point(btnRefresh.Left - Theme.SpaceLG - txtSearch.Width, btnY + (BtnH - txtSearch.Height) / 2);
 
             int divY = rowY + headerBlockH + Theme.SpaceSM;
             this.pnlDivider.Location = new Point(M, divY);
@@ -194,8 +203,8 @@ namespace WinformsGUI.Views.Talkshow
         {
             try
             {
-                var talkshows = await _talkshowService.GetAllTalkshowsAsync();
-                dgvTalkshows.DataSource = talkshows;
+                _allTalkshows = await _talkshowService.GetAllTalkshowsAsync();
+                FilterData();
 
                 if (!_columnsInitialized)
                 {
@@ -218,9 +227,33 @@ namespace WinformsGUI.Views.Talkshow
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading talkshows: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void FilterData()
+        {
+            if (_allTalkshows == null) return;
+            var q = txtSearch.Text.Trim().ToLower();
+            if (string.IsNullOrEmpty(q))
+                dgvTalkshows.DataSource = _allTalkshows;
+            else
+            {
+                var filtered = new System.Collections.Generic.List<TalkshowResponse>();
+                foreach (var ts in _allTalkshows)
+                {
+                    if ((ts.Title != null && ts.Title.ToLower().Contains(q)) || 
+                        (ts.SpeakerName != null && ts.SpeakerName.ToLower().Contains(q)) ||
+                        (ts.Venue != null && ts.Venue.ToLower().Contains(q)))
+                    {
+                        filtered.Add(ts);
+                    }
+                }
+                dgvTalkshows.DataSource = filtered;
+            }
+        }
+
+        private void TxtSearch_TextChanged(object? sender, EventArgs e) => FilterData();
 
         // ── Actions ─────────────────────────────────────────────────────────
         private void BtnEdit_Action(int row)

@@ -23,6 +23,8 @@ namespace WinformsGUI.Views.Booth
 
         private BoothService _boothService;
         private bool         _columnsInitialized;
+        private WinformsGUI.Controls.SearchBar txtSearch;
+        private System.Collections.Generic.List<BoothResponse> _allBooths = new();
 
         // Layout constants
         private const int M       = Theme.SpaceLG;  // margin = 28
@@ -50,6 +52,7 @@ namespace WinformsGUI.Views.Booth
             this.lblDescription= new Label();
             this.btnRefresh    = new RoundedButton();
             this.btnAdd        = new RoundedButton();
+            this.txtSearch     = new WinformsGUI.Controls.SearchBar();
             this.pnlDivider    = new Panel();
             this.dgvBooths     = new DataGridView();
 
@@ -87,6 +90,11 @@ namespace WinformsGUI.Views.Booth
             Theme.ApplyToButton(this.btnAdd);
             this.btnAdd.Click        += BtnAdd_Click;
 
+            // ── Search Bar ──────────────────────────────────────────────────
+            this.txtSearch.Size          = new Size(250, 42);
+            this.txtSearch.PlaceholderText = "Cari booth...";
+            this.txtSearch.TextChangedEvent += TxtSearch_TextChanged;
+
             // ── Divider ─────────────────────────────────────────────────────
             this.pnlDivider.BackColor = Theme.BorderSoft;
             this.pnlDivider.Size      = new Size(10, 1);
@@ -100,7 +108,7 @@ namespace WinformsGUI.Views.Booth
 
             // ── Compose ─────────────────────────────────────────────────────
             this.Controls.AddRange(new Control[] {
-                lblTitle, lblDescription, btnRefresh, btnAdd, pnlDivider, dgvBooths
+                lblTitle, lblDescription, txtSearch, btnRefresh, btnAdd, pnlDivider, dgvBooths
             });
 
             this.Resize += (s, e) => RepositionControls();
@@ -132,6 +140,7 @@ namespace WinformsGUI.Views.Booth
             // Buttons right-aligned
             this.btnAdd.Location     = new Point(w - M - btnAdd.Width, btnY);
             this.btnRefresh.Location = new Point(btnAdd.Left - Theme.SpaceSM - btnRefresh.Width, btnY + (BtnH - btnRefresh.Height) / 2);
+            this.txtSearch.Location  = new Point(btnRefresh.Left - Theme.SpaceLG - txtSearch.Width, btnY + (BtnH - txtSearch.Height) / 2);
 
             // Divider
             int divY = rowY + headerBlockH + Theme.SpaceSM;
@@ -192,8 +201,8 @@ namespace WinformsGUI.Views.Booth
         {
             try
             {
-                var booths = await _boothService.GetAllBoothsAsync();
-                dgvBooths.DataSource = booths;
+                _allBooths = await _boothService.GetAllBoothsAsync();
+                FilterData();
 
                 if (!_columnsInitialized)
                 {
@@ -226,6 +235,30 @@ namespace WinformsGUI.Views.Booth
                 MessageBox.Show($"Error loading data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void FilterData()
+        {
+            if (_allBooths == null) return;
+            var q = txtSearch.Text.Trim().ToLower();
+            if (string.IsNullOrEmpty(q))
+                dgvBooths.DataSource = _allBooths;
+            else
+            {
+                var filtered = new System.Collections.Generic.List<BoothResponse>();
+                foreach (var b in _allBooths)
+                {
+                    if ((b.Name != null && b.Name.ToLower().Contains(q)) || 
+                        (b.Location != null && b.Location.ToLower().Contains(q)) ||
+                        (b.CategoryName != null && b.CategoryName.ToLower().Contains(q)))
+                    {
+                        filtered.Add(b);
+                    }
+                }
+                dgvBooths.DataSource = filtered;
+            }
+        }
+
+        private void TxtSearch_TextChanged(object? sender, EventArgs e) => FilterData();
 
         // ── Actions ─────────────────────────────────────────────────────────
         private void BtnEdit_Action(int row)

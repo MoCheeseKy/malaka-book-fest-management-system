@@ -27,6 +27,9 @@ namespace WinformsGUI.Views.Booth
         private RoundedButton btnAddBook;
         private Panel         pnlDivider2;
         private DataGridView  dgvBooks;
+        private WinformsGUI.Controls.SearchBar txtSearch;
+
+        private System.Collections.Generic.List<BookResponse> _allBooks = new();
 
         private bool _columnsInitialized;
 
@@ -60,6 +63,7 @@ namespace WinformsGUI.Views.Booth
             this.lblBooksSection = new Label();
             this.btnRefresh      = new RoundedButton();
             this.btnAddBook      = new RoundedButton();
+            this.txtSearch       = new WinformsGUI.Controls.SearchBar();
             this.pnlDivider2     = new Panel();
             this.dgvBooks        = new DataGridView();
 
@@ -122,6 +126,11 @@ namespace WinformsGUI.Views.Booth
             Theme.ApplyToButton(this.btnAddBook);
             this.btnAddBook.Click       += BtnAddBook_Click;
 
+            // ── Search Bar ──────────────────────────────────────────────────
+            this.txtSearch.Size          = new Size(250, 42);
+            this.txtSearch.PlaceholderText = "Cari buku...";
+            this.txtSearch.TextChangedEvent += TxtSearch_TextChanged;
+
             // ── Divider 2 ───────────────────────────────────────────────────
             this.pnlDivider2.BackColor = Theme.BorderSoft;
             this.pnlDivider2.Size      = new Size(10, 1);
@@ -135,7 +144,7 @@ namespace WinformsGUI.Views.Booth
 
             this.Controls.AddRange(new Control[] {
                 lblBoothName, pnlStatusChip, lblBoothMeta, pnlDivider,
-                lblBooksSection, btnRefresh, btnAddBook, pnlDivider2,
+                lblBooksSection, txtSearch, btnRefresh, btnAddBook, pnlDivider2,
                 dgvBooks
             });
 
@@ -175,6 +184,8 @@ namespace WinformsGUI.Views.Booth
             this.btnAddBook.Location      = new Point(w - M - btnAddBook.Width, sec2Y + (secBtnH - BtnH) / 2);
             this.btnRefresh.Location      = new Point(btnAddBook.Left - Theme.SpaceSM - btnRefresh.Width,
                                                       sec2Y + (secBtnH - btnRefresh.Height) / 2);
+            this.txtSearch.Location       = new Point(btnRefresh.Left - Theme.SpaceLG - txtSearch.Width,
+                                                      sec2Y + (secBtnH - txtSearch.Height) / 2);
 
             int div2Y = sec2Y + secBtnH + Theme.SpaceSM;
             this.pnlDivider2.Location = new Point(M, div2Y);
@@ -224,15 +235,16 @@ namespace WinformsGUI.Views.Booth
         {
             try
             {
-                var books = await _bookService.GetBooksByBoothAsync(_booth.Id);
-                dgvBooks.DataSource = books;
+                _allBooks = await _bookService.GetBooksByBoothAsync(_booth.Id);
+                FilterBooks();
 
                 if (!_columnsInitialized)
                 {
-                    // Hide unused columns
-                    if (dgvBooks.Columns.Contains("BoothId")) dgvBooks.Columns["BoothId"].Visible = false;
-                    if (dgvBooks.Columns.Contains("Isbn")) dgvBooks.Columns["Isbn"].Visible = false;
-                    if (dgvBooks.Columns.Contains("CoverUrl")) dgvBooks.Columns["CoverUrl"].Visible = false;
+                    if (dgvBooks.Columns["Id"]          != null) dgvBooks.Columns["Id"].Visible          = false;
+                    if (dgvBooks.Columns["Publisher"]   != null) dgvBooks.Columns["Publisher"].Visible   = false; // just in case
+                    if (dgvBooks.Columns["Isbn"]        != null) dgvBooks.Columns["Isbn"].Visible        = false;
+                    if (dgvBooks.Columns["CoverUrl"]    != null) dgvBooks.Columns["CoverUrl"].Visible    = false;
+                    if (dgvBooks.Columns["BoothId"]     != null) dgvBooks.Columns["BoothId"].Visible     = false;
 
                     var colAksi = new DataGridViewTextBoxColumn
                     {
@@ -252,6 +264,29 @@ namespace WinformsGUI.Views.Booth
                 MessageBox.Show($"Error loading books: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void FilterBooks()
+        {
+            if (_allBooks == null) return;
+            var q = txtSearch.Text.Trim().ToLower();
+            if (string.IsNullOrEmpty(q))
+                dgvBooks.DataSource = _allBooks;
+            else
+            {
+                var filtered = new System.Collections.Generic.List<BookResponse>();
+                foreach (var b in _allBooks)
+                {
+                    if ((b.Title != null && b.Title.ToLower().Contains(q)) || 
+                        (b.Author != null && b.Author.ToLower().Contains(q)))
+                    {
+                        filtered.Add(b);
+                    }
+                }
+                dgvBooks.DataSource = filtered;
+            }
+        }
+
+        private void TxtSearch_TextChanged(object? sender, EventArgs e) => FilterBooks();
 
         // ── Actions ─────────────────────────────────────────────────────────
         private void BtnEdit_Action(int row)
