@@ -1,6 +1,7 @@
 using MalakaBookFest.Application.Services;
 using MalakaBookFest.Application.Tables;
 using MalakaBookFest.Core.Entities;
+using MalakaBookFest.Core.Enums;
 using MalakaBookFest.Core.Interfaces.Repositories;
 using MalakaBookFest.Core.Interfaces.Services;
 using MalakaBookFest.Infrastructure.Configuration;
@@ -9,6 +10,8 @@ using MalakaBookFest.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
+using Npgsql.NameTranslation;
 
 namespace MalakaBookFest.Infrastructure.Extensions;
 
@@ -19,7 +22,13 @@ public static class ServiceCollectionExtensions
         IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"), o => o
+                .MapEnum<UserRole>("user_role", nameTranslator: new NpgsqlNullNameTranslator())
+                .MapEnum<BoothCategory>("booth_category", nameTranslator: new NpgsqlNullNameTranslator())
+                .MapEnum<TalkshowStatus>("talkshow_status", nameTranslator: new NpgsqlNullNameTranslator())
+                .MapEnum<TicketType>("ticket_type", nameTranslator: new NpgsqlNullNameTranslator())
+                .MapEnum<TicketStatus>("ticket_status", nameTranslator: new NpgsqlNullNameTranslator())
+            ));
 
         services.Configure<JwtConfig>(configuration.GetSection("JwtConfig"));
         services.Configure<TicketConfig>(configuration.GetSection("TicketConfig"));
