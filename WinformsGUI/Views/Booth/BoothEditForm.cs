@@ -23,6 +23,9 @@ namespace WinformsGUI.Views.Booth
         private TextBox       txtDescription;
         private Label         lblLocation;
         private TextBox       txtLocation;
+        private Label         lblCategory;
+        private ComboBox      cmbCategory;
+        private CheckBox      chkIsActive;
         private RoundedButton btnSave;
         private RoundedButton btnCancel;
 
@@ -39,6 +42,14 @@ namespace WinformsGUI.Views.Booth
                 txtName.Text        = _existingBooth.Name;
                 txtDescription.Text = _existingBooth.Description;
                 txtLocation.Text    = _existingBooth.Location;
+                cmbCategory.SelectedIndex = _existingBooth.Category >= 0 && _existingBooth.Category < cmbCategory.Items.Count ? _existingBooth.Category : 4;
+                chkIsActive.Checked = _existingBooth.IsActive;
+                chkIsActive.Visible = true;
+            }
+            else
+            {
+                cmbCategory.SelectedIndex = 0; // Default Publisher
+                chkIsActive.Visible = false; // Not needed for create
             }
         }
 
@@ -53,11 +64,14 @@ namespace WinformsGUI.Views.Booth
             this.txtDescription = new TextBox();
             this.lblLocation    = new Label();
             this.txtLocation    = new TextBox();
+            this.lblCategory    = new Label();
+            this.cmbCategory    = new ComboBox();
+            this.chkIsActive    = new CheckBox();
             this.btnSave        = new RoundedButton();
             this.btnCancel      = new RoundedButton();
 
             this.Text            = _existingBooth == null ? "Tambah Booth" : "Edit Booth";
-            this.Size            = new Size(460, 510);
+            this.Size            = new Size(460, 640);
             this.BackColor       = Theme.BgSurface;
             this.ForeColor       = Theme.TextPrimary;
             this.Font            = Theme.FontBody;
@@ -109,6 +123,27 @@ namespace WinformsGUI.Views.Booth
             MakeFieldLabel(lblLocation, "LOKASI", x, y); y += Theme.SpaceSM + 2;
             MakeTextBox(txtLocation, x, y, w, 38); y += 38 + Theme.SpaceLG;
 
+            // Category
+            MakeFieldLabel(lblCategory, "KATEGORI", x, y); y += Theme.SpaceSM + 2;
+            this.cmbCategory.Location     = new Point(x, y);
+            this.cmbCategory.Size         = new Size(w, 38);
+            this.cmbCategory.DropDownStyle= ComboBoxStyle.DropDownList;
+            this.cmbCategory.BackColor    = Theme.BgInput;
+            this.cmbCategory.ForeColor    = Theme.TextPrimary;
+            this.cmbCategory.Font         = Theme.FontBody;
+            this.cmbCategory.Items.AddRange(new string[] { "Publisher", "Indie Author", "Merchandise", "Food & Beverage", "Other" });
+            y += 38 + Theme.SpaceMD;
+
+            // Status (IsActive)
+            this.chkIsActive.Location     = new Point(x, y);
+            this.chkIsActive.Size         = new Size(w, 24);
+            this.chkIsActive.Text         = "Booth Aktif";
+            this.chkIsActive.Font         = Theme.FontBody;
+            this.chkIsActive.ForeColor    = Theme.TextPrimary;
+            this.chkIsActive.BackColor    = Color.Transparent;
+            this.chkIsActive.Cursor       = Cursors.Hand;
+            y += 24 + Theme.SpaceLG;
+
             // Buttons
             int btnW = (w - Theme.SpaceSM) / 2;
             this.btnSave.Text         = "Simpan";
@@ -130,6 +165,7 @@ namespace WinformsGUI.Views.Booth
             this.Controls.AddRange(new Control[] {
                 lblTitle, lblSubtitle, pnlDivider,
                 lblName, txtName, lblDescription, txtDescription, lblLocation, txtLocation,
+                lblCategory, cmbCategory, chkIsActive,
                 btnSave, btnCancel
             });
         }
@@ -160,9 +196,9 @@ namespace WinformsGUI.Views.Booth
             try
             {
                 if (_existingBooth == null)
-                    await _boothService.CreateBoothAsync(new CreateBoothRequest { Name = txtName.Text, Description = txtDescription.Text, Location = txtLocation.Text });
+                    await _boothService.CreateBoothAsync(new CreateBoothRequest { Name = txtName.Text, Description = txtDescription.Text, Location = txtLocation.Text, Category = cmbCategory.SelectedIndex });
                 else
-                    await _boothService.UpdateBoothAsync(_existingBooth.Id, new UpdateBoothRequest { Name = txtName.Text, Description = txtDescription.Text, Location = txtLocation.Text });
+                    await _boothService.UpdateBoothAsync(_existingBooth.Id, new UpdateBoothRequest { Name = txtName.Text, Description = txtDescription.Text, Location = txtLocation.Text, Category = cmbCategory.SelectedIndex, IsActive = chkIsActive.Checked });
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }

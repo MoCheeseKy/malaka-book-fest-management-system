@@ -1,4 +1,4 @@
-﻿using MalakaBookFest.Core.Entities;
+using MalakaBookFest.Core.Entities;
 using MalakaBookFest.Core.Enums;
 using MalakaBookFest.Core.Interfaces.Repositories;
 using MalakaBookFest.Core.Interfaces.Services;
@@ -38,7 +38,7 @@ public class BoothService : IBoothService
         var booth = await _boothRepository.GetByIdAsync(boothId)
             ?? throw new KeyNotFoundException($"Booth {boothId} not found.");
         var requester = await _userRepository.GetByIdAsync(requesterId)
-            ?? throw new KeyNotFoundException("Requester not found.");
+            ?? throw new Exception($"DEBUG: Requester ID '{requesterId}' not found in database.");
         if (requester.Role != UserRole.Admin && booth.OrganizerId != requesterId)
             throw new UnauthorizedAccessException("You do not have permission to update this booth.");
         booth.BoothName = updated.BoothName;

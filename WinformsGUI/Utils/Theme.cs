@@ -23,6 +23,7 @@ namespace WinformsGUI.Utils
         public static readonly Color AccentPrimaryPress = Color.FromArgb( 80, 68,  190);
         public static readonly Color AccentSecond       = Color.FromArgb( 93, 201, 168); // #5DC9A8
         public static readonly Color AccentSecondHover  = Color.FromArgb( 72, 175, 145);
+        public static readonly Color AccentSuccess      = Color.FromArgb( 93, 201, 168); // Same as AccentSecond
         public static readonly Color AccentDanger       = Color.FromArgb(224, 123, 123); // #E07B7B
         public static readonly Color AccentDangerHover  = Color.FromArgb(200,  95,  95);
 

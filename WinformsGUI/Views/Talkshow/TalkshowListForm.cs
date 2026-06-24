@@ -201,6 +201,7 @@ namespace WinformsGUI.Views.Talkshow
                 {
                     if (dgvTalkshows.Columns["TalkshowId"] != null) dgvTalkshows.Columns["TalkshowId"].Visible = false;
                     if (dgvTalkshows.Columns["SpeakerBio"] != null) dgvTalkshows.Columns["SpeakerBio"].Visible = false;
+                    if (dgvTalkshows.Columns["MaxCapacity"] != null) dgvTalkshows.Columns["MaxCapacity"].Visible = false;
 
                     var colAksi = new DataGridViewTextBoxColumn
                     {

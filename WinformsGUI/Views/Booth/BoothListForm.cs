@@ -199,6 +199,14 @@ namespace WinformsGUI.Views.Booth
                 {
                     if (dgvBooths.Columns["Id"]          != null) dgvBooths.Columns["Id"].Visible          = false;
                     if (dgvBooths.Columns["Description"] != null) dgvBooths.Columns["Description"].Visible = false;
+                    if (dgvBooths.Columns["Category"]    != null) dgvBooths.Columns["Category"].Visible    = false;
+                    if (dgvBooths.Columns["IsActive"]    != null) dgvBooths.Columns["IsActive"].Visible    = false;
+
+                    if (dgvBooths.Columns["CategoryName"] != null)
+                    {
+                        dgvBooths.Columns["CategoryName"].HeaderText = "Category";
+                        dgvBooths.Columns["CategoryName"].DisplayIndex = 2; // Adjust if needed
+                    }
 
                     var colAksi = new DataGridViewTextBoxColumn
                     {

@@ -76,7 +76,17 @@ public class TicketController : ControllerBase
         return Ok(ApiResponse<TicketDto>.Ok(MapToDto(ticket), "Ticket scanned successfully."));
     }
 
-    private Guid GetRequesterId() => Guid.Parse("11111111-1111-1111-1111-111111111111");
+    private Guid GetRequesterId() 
+    {
+        var sub = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
+        if (string.IsNullOrEmpty(sub))
+        {
+            var claims = string.Join(", ", User.Claims.Select(c => $"{c.Type}={c.Value}"));
+            var authHeader = Request.Headers["Authorization"].ToString();
+            throw new Exception($"DEBUG INFO - IsAuth: {User.Identity?.IsAuthenticated}, Claims: [{claims}], AuthHeader: {(string.IsNullOrEmpty(authHeader) ? "EMPTY" : "PRESENT")}");
+        }
+        return Guid.TryParse(sub, out var id) ? id : Guid.Empty;
+    }
 
     private static TicketDto MapToDto(Ticket t) => new()
     {

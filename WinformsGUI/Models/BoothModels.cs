@@ -16,6 +16,22 @@ namespace WinformsGUI.Models
 
         [JsonPropertyName("boothNumber")]
         public string Location { get; set; } = string.Empty;
+
+        [JsonPropertyName("category")]
+        public int Category { get; set; }
+
+        [JsonIgnore]
+        public string CategoryName => Category switch
+        {
+            0 => "Publisher",
+            1 => "Indie Author",
+            2 => "Merchandise",
+            3 => "Food & Beverage",
+            _ => "Other"
+        };
+
+        [JsonPropertyName("isActive")]
+        public bool IsActive { get; set; }
     }
 
     public class CreateBoothRequest
@@ -28,6 +44,9 @@ namespace WinformsGUI.Models
 
         [JsonPropertyName("boothNumber")]
         public string Location { get; set; } = string.Empty;
+
+        [JsonPropertyName("category")]
+        public int Category { get; set; }
     }
 
     public class UpdateBoothRequest
@@ -40,5 +59,11 @@ namespace WinformsGUI.Models
 
         [JsonPropertyName("boothNumber")]
         public string Location { get; set; } = string.Empty;
+
+        [JsonPropertyName("category")]
+        public int Category { get; set; }
+
+        [JsonPropertyName("isActive")]
+        public bool IsActive { get; set; }
     }
 }

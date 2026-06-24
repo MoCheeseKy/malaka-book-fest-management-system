@@ -1,4 +1,4 @@
-﻿using MalakaBookFest.Core.Entities;
+using MalakaBookFest.Core.Entities;
 using MalakaBookFest.Core.Enums;
 using MalakaBookFest.Core.Interfaces.Repositories;
 using MalakaBookFest.Core.Interfaces.Services;
@@ -28,7 +28,7 @@ public class BookService : IBookService
         var booth = await _boothRepository.GetByIdAsync(book.BoothId)
             ?? throw new KeyNotFoundException("Booth not found.");
         var requester = await _userRepository.GetByIdAsync(requesterId)
-            ?? throw new KeyNotFoundException("Requester not found.");
+            ?? throw new Exception($"DEBUG: Requester ID '{requesterId}' not found in database.");
         if (requester.Role != UserRole.Admin && booth.OrganizerId != requesterId)
             throw new UnauthorizedAccessException("You can only add books to your own booth.");
         book.BookId = Guid.NewGuid();

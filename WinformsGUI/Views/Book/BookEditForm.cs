@@ -22,8 +22,10 @@ namespace WinformsGUI.Views.Book
         private TextBox       txtTitle;
         private Label         lblAuthor;
         private TextBox       txtAuthor;
-        private Label         lblPublisher;
-        private TextBox       txtPublisher;
+        private Label         lblIsbn;
+        private TextBox       txtIsbn;
+        private Label         lblCoverUrl;
+        private TextBox       txtCoverUrl;
         private Label         lblPrice;
         private NumericUpDown numPrice;
         private Label         lblStock;
@@ -44,7 +46,8 @@ namespace WinformsGUI.Views.Book
                 lblSubtitle.Text  = $"Memperbarui: {_existingBook.Title}";
                 txtTitle.Text     = _existingBook.Title;
                 txtAuthor.Text    = _existingBook.Author;
-                txtPublisher.Text = _existingBook.Publisher;
+                txtIsbn.Text      = _existingBook.Isbn;
+                txtCoverUrl.Text  = _existingBook.CoverUrl;
                 numPrice.Value    = _existingBook.Price;
                 numStock.Value    = _existingBook.Stock;
             }
@@ -59,8 +62,10 @@ namespace WinformsGUI.Views.Book
             this.txtTitle    = new TextBox();
             this.lblAuthor   = new Label();
             this.txtAuthor   = new TextBox();
-            this.lblPublisher= new Label();
-            this.txtPublisher= new TextBox();
+            this.lblIsbn     = new Label();
+            this.txtIsbn     = new TextBox();
+            this.lblCoverUrl = new Label();
+            this.txtCoverUrl = new TextBox();
             this.lblPrice    = new Label();
             this.numPrice    = new NumericUpDown();
             this.lblStock    = new Label();
@@ -108,8 +113,11 @@ namespace WinformsGUI.Views.Book
             MakeFieldLabel(lblAuthor, "PENULIS", m, y); y += Theme.SpaceSM + 2;
             MakeTextBox(txtAuthor, m, y, w, 38); y += 38 + Theme.SpaceMD;
 
-            MakeFieldLabel(lblPublisher, "PENERBIT", m, y); y += Theme.SpaceSM + 2;
-            MakeTextBox(txtPublisher, m, y, w, 38); y += 38 + Theme.SpaceMD;
+            MakeFieldLabel(lblIsbn, "ISBN", m, y); y += Theme.SpaceSM + 2;
+            MakeTextBox(txtIsbn, m, y, w, 38); y += 38 + Theme.SpaceMD;
+
+            MakeFieldLabel(lblCoverUrl, "COVER URL", m, y); y += Theme.SpaceSM + 2;
+            MakeTextBox(txtCoverUrl, m, y, w, 38); y += 38 + Theme.SpaceMD;
 
             // Price + Stock row
             int colW = (w - Theme.SpaceSM) / 2;
@@ -149,7 +157,8 @@ namespace WinformsGUI.Views.Book
 
             this.Controls.AddRange(new Control[] {
                 lblTitle, lblSubtitle, pnlDivider,
-                lblBookTitle, txtTitle, lblAuthor, txtAuthor, lblPublisher, txtPublisher,
+                lblBookTitle, txtTitle, lblAuthor, txtAuthor, lblIsbn, txtIsbn,
+                lblCoverUrl, txtCoverUrl,
                 lblPrice, numPrice, lblStock, numStock,
                 btnSave, btnCancel
             });
@@ -183,10 +192,14 @@ namespace WinformsGUI.Views.Book
             btnSave.Enabled = false; btnSave.Text = "Menyimpan...";
             try
             {
+                string? rawIsbn = string.IsNullOrWhiteSpace(txtIsbn.Text) ? null : txtIsbn.Text;
+                string? isbn = rawIsbn?.Replace(" ", "").Replace("-", "");
+                string? coverUrl = string.IsNullOrWhiteSpace(txtCoverUrl.Text) ? null : txtCoverUrl.Text;
+
                 if (_existingBook == null)
-                    await _bookService.CreateBookAsync(_boothId, new CreateBookRequest { Title = txtTitle.Text, Author = txtAuthor.Text, Publisher = txtPublisher.Text, Price = numPrice.Value, Stock = (int)numStock.Value });
+                    await _bookService.CreateBookAsync(_boothId, new CreateBookRequest { Title = txtTitle.Text, Author = txtAuthor.Text, Isbn = isbn, CoverUrl = coverUrl, Price = numPrice.Value, Stock = (int)numStock.Value });
                 else
-                    await _bookService.UpdateBookAsync(_boothId, _existingBook.Id, new UpdateBookRequest { Title = txtTitle.Text, Author = txtAuthor.Text, Publisher = txtPublisher.Text, Price = numPrice.Value, Stock = (int)numStock.Value });
+                    await _bookService.UpdateBookAsync(_boothId, _existingBook.Id, new UpdateBookRequest { Title = txtTitle.Text, Author = txtAuthor.Text, Isbn = isbn, CoverUrl = coverUrl, Price = numPrice.Value, Stock = (int)numStock.Value });
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }

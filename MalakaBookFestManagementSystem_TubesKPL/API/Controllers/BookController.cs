@@ -96,7 +96,17 @@ public class BookController : ControllerBase
         return Ok(ApiResponse<object>.Ok(null!, "Book deleted successfully."));
     }
 
-    private Guid GetRequesterId() => Guid.Parse("11111111-1111-1111-1111-111111111111");
+    private Guid GetRequesterId() 
+    {
+        var sub = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
+        if (string.IsNullOrEmpty(sub))
+        {
+            var claims = string.Join(", ", User.Claims.Select(c => $"{c.Type}={c.Value}"));
+            var authHeader = Request.Headers["Authorization"].ToString();
+            throw new Exception($"DEBUG INFO - IsAuth: {User.Identity?.IsAuthenticated}, Claims: [{claims}], AuthHeader: '{authHeader}'");
+        }
+        return Guid.TryParse(sub, out var id) ? id : Guid.Empty;
+    }
 
     private static BookDto MapToDto(Book b) => new()
     {

@@ -22,6 +22,10 @@ namespace WinformsGUI.Views.Book
         private Label         lblPriceVal;
         private Label         lblStockKey;
         private Label         lblStockVal;
+        private Label         lblCoverUrlKey;
+        private Label         lblCoverUrlVal;
+        private Label         lblBoothIdKey;
+        private Label         lblBoothIdVal;
         private RoundedButton btnClose;
 
         public BookDetailForm(BookResponse book)
@@ -44,10 +48,14 @@ namespace WinformsGUI.Views.Book
             this.lblPriceVal    = new Label();
             this.lblStockKey    = new Label();
             this.lblStockVal    = new Label();
+            this.lblCoverUrlKey = new Label();
+            this.lblCoverUrlVal = new Label();
+            this.lblBoothIdKey  = new Label();
+            this.lblBoothIdVal  = new Label();
             this.btnClose       = new RoundedButton();
 
             this.Text            = "Detail Buku";
-            this.Size            = new Size(520, 460);
+            this.Size            = new Size(520, 580);
             this.BackColor       = Theme.BgSurface;
             this.ForeColor       = Theme.TextPrimary;
             this.Font            = Theme.FontBody;
@@ -96,11 +104,13 @@ namespace WinformsGUI.Views.Book
             // Info Card
             this.pnlInfoCard.BackColor = Theme.BgCard;
             this.pnlInfoCard.Location  = new Point(m, y);
-            this.pnlInfoCard.Size      = new Size(w, 174);
-            AddMetaRow(pnlInfoCard, lblPublisherKey, lblPublisherVal, "Penerbit",  0);
-            AddMetaRow(pnlInfoCard, lblPriceKey,     lblPriceVal,     "Harga",     58);
-            AddMetaRow(pnlInfoCard, lblStockKey,     lblStockVal,     "Stok",      116);
-            y += 174 + Theme.SpaceLG;
+            this.pnlInfoCard.Size      = new Size(w, 290);
+            AddMetaRow(pnlInfoCard, lblPublisherKey, lblPublisherVal, "ISBN",       0);
+            AddMetaRow(pnlInfoCard, lblPriceKey,     lblPriceVal,     "Harga",      58);
+            AddMetaRow(pnlInfoCard, lblStockKey,     lblStockVal,     "Stok",       116);
+            AddMetaRow(pnlInfoCard, lblCoverUrlKey,  lblCoverUrlVal,  "Cover URL",  174);
+            AddMetaRow(pnlInfoCard, lblBoothIdKey,   lblBoothIdVal,   "Booth ID",   232);
+            y += 290 + Theme.SpaceLG;
 
             // Close Button
             this.btnClose.Text         = "Tutup";
@@ -150,9 +160,11 @@ namespace WinformsGUI.Views.Book
         {
             lblBookTitle.Text   = _book.Title;
             lblBookAuthor.Text  = $"✍  {_book.Author}";
-            lblPublisherVal.Text= _book.Publisher;
+            lblPublisherVal.Text= string.IsNullOrEmpty(_book.Isbn) ? "-" : _book.Isbn;
             lblPriceVal.Text    = $"Rp {_book.Price:N0}";
             lblStockVal.Text    = _book.Stock.ToString();
+            lblCoverUrlVal.Text = string.IsNullOrEmpty(_book.CoverUrl) ? "-" : _book.CoverUrl;
+            lblBoothIdVal.Text  = _book.BoothId.ToString();
         }
     }
 }

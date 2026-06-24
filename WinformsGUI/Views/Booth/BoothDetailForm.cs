@@ -17,6 +17,8 @@ namespace WinformsGUI.Views.Booth
         // Header row
         private Label         lblBoothName;
         private Label         lblBoothMeta;
+        private Panel         pnlStatusChip;
+        private Label         lblStatusText;
         private Panel         pnlDivider;
 
         // Books section
@@ -52,6 +54,8 @@ namespace WinformsGUI.Views.Booth
         {
             this.lblBoothName    = new Label();
             this.lblBoothMeta    = new Label();
+            this.pnlStatusChip   = new Panel();
+            this.lblStatusText   = new Label();
             this.pnlDivider      = new Panel();
             this.lblBooksSection = new Label();
             this.btnRefresh      = new RoundedButton();
@@ -73,8 +77,20 @@ namespace WinformsGUI.Views.Booth
             this.lblBoothName.BackColor = Color.Transparent;
             this.lblBoothName.AutoSize  = true;
 
+            // ── Status Chip ─────────────────────────────────────────────────
+            this.pnlStatusChip.BackColor = _booth.IsActive ? Theme.AccentSuccess : Theme.AccentDanger;
+            this.pnlStatusChip.Size      = new Size(80, 24);
+            
+            this.lblStatusText.Text      = _booth.IsActive ? "Active" : "Inactive";
+            this.lblStatusText.Font      = Theme.FontSmall;
+            this.lblStatusText.ForeColor = Color.White;
+            this.lblStatusText.AutoSize  = false;
+            this.lblStatusText.TextAlign = ContentAlignment.MiddleCenter;
+            this.lblStatusText.Dock      = DockStyle.Fill;
+            this.pnlStatusChip.Controls.Add(lblStatusText);
+
             // ── Booth Meta ──────────────────────────────────────────────────
-            this.lblBoothMeta.Text      = $"📍 {_booth.Location}   ·   {_booth.Description}";
+            this.lblBoothMeta.Text      = $"📍 {_booth.Location}   ·   🏷️ {_booth.CategoryName}   ·   {_booth.Description}";
             this.lblBoothMeta.Font      = Theme.FontSmall;
             this.lblBoothMeta.ForeColor = Theme.TextMuted;
             this.lblBoothMeta.BackColor = Color.Transparent;
@@ -118,7 +134,7 @@ namespace WinformsGUI.Views.Booth
             this.dgvBooks.CellMouseLeave += (s, e) => { this.dgvBooks.Cursor = Cursors.Default; };
 
             this.Controls.AddRange(new Control[] {
-                lblBoothName, lblBoothMeta, pnlDivider,
+                lblBoothName, pnlStatusChip, lblBoothMeta, pnlDivider,
                 lblBooksSection, btnRefresh, btnAddBook, pnlDivider2,
                 dgvBooks
             });
@@ -143,6 +159,7 @@ namespace WinformsGUI.Views.Booth
 
             // Section 1: Booth info
             this.lblBoothName.Location = new Point(M, M);
+            this.pnlStatusChip.Location = new Point(this.lblBoothName.Right + Theme.SpaceMD, M + (TitleH - this.pnlStatusChip.Height) / 2);
             this.lblBoothMeta.Location = new Point(M, M + TitleH + 6);
             this.lblBoothMeta.Width    = w - M * 2;
 
@@ -212,6 +229,11 @@ namespace WinformsGUI.Views.Booth
 
                 if (!_columnsInitialized)
                 {
+                    // Hide unused columns
+                    if (dgvBooks.Columns.Contains("BoothId")) dgvBooks.Columns["BoothId"].Visible = false;
+                    if (dgvBooks.Columns.Contains("Isbn")) dgvBooks.Columns["Isbn"].Visible = false;
+                    if (dgvBooks.Columns.Contains("CoverUrl")) dgvBooks.Columns["CoverUrl"].Visible = false;
+
                     var colAksi = new DataGridViewTextBoxColumn
                     {
                         Name         = "colAksi",

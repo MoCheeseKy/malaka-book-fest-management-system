@@ -47,6 +47,16 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(jwtConfig.Secret)),
     };
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine("============= JWT VALIDATION FAILED =============");
+            Console.WriteLine(context.Exception.ToString());
+            Console.WriteLine("=================================================");
+            return Task.CompletedTask;
+        }
+    };
 });
 
 builder.Services.AddAuthorization();
