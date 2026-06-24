@@ -9,6 +9,7 @@ namespace WinformsGUI.Views.Main
     {
         private Panel  pnlSidebar;
         private Panel  pnlContent;
+        private PictureBox picLogo;
         private Label  lblAppName;
         private Label  lblAppSub;
         private Panel  pnlDividerTop;
@@ -31,6 +32,7 @@ namespace WinformsGUI.Views.Main
         {
             this.pnlSidebar       = new Panel();
             this.pnlContent       = new Panel();
+            this.picLogo          = new PictureBox();
             this.lblAppName       = new Label();
             this.lblAppSub        = new Label();
             this.pnlDividerTop    = new Panel();
@@ -56,13 +58,20 @@ namespace WinformsGUI.Views.Main
             this.pnlSidebar.Width     = 280;
             this.pnlSidebar.BackColor = Theme.BgSurface;
 
+            // Logo
+            this.picLogo.Image     = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, "Assets", "logo.jpg"));
+            this.picLogo.SizeMode  = PictureBoxSizeMode.Zoom;
+            this.picLogo.Size      = new Size(64, 64);
+            this.picLogo.Location  = new Point(Theme.SpaceLG, Theme.SpaceLG);
+            this.picLogo.BackColor = Color.Transparent;
+
             // App Name
-            this.lblAppName.Text      = "📚 Book Fest";
+            this.lblAppName.Text      = "Malaka Book Fest";
             this.lblAppName.Font      = Theme.FontHeader;
             this.lblAppName.ForeColor = Theme.TextPrimary;
             this.lblAppName.BackColor = Color.Transparent;
             this.lblAppName.AutoSize  = true;
-            this.lblAppName.Location  = new Point(Theme.SpaceLG, Theme.SpaceLG);
+            this.lblAppName.Location  = new Point(Theme.SpaceLG, picLogo.Bottom + 10);
 
             // App Subtitle
             this.lblAppSub.Text      = "Management System";
@@ -70,10 +79,10 @@ namespace WinformsGUI.Views.Main
             this.lblAppSub.ForeColor = Theme.TextMuted;
             this.lblAppSub.BackColor = Color.Transparent;
             this.lblAppSub.AutoSize  = true;
-            this.lblAppSub.Location  = new Point(Theme.SpaceLG, Theme.SpaceLG + 34);
+            this.lblAppSub.Location  = new Point(Theme.SpaceLG, lblAppName.Bottom + 5);
 
             // Top Divider
-            this.pnlDividerTop.Location  = new Point(Theme.SpaceLG, 90);
+            this.pnlDividerTop.Location  = new Point(Theme.SpaceLG, lblAppSub.Bottom + 20);
             this.pnlDividerTop.Size      = new Size(228, 1);
             this.pnlDividerTop.BackColor = Theme.BorderSoft;
 
@@ -83,12 +92,13 @@ namespace WinformsGUI.Views.Main
             this.lblNavSection.ForeColor = Theme.TextMuted;
             this.lblNavSection.BackColor = Color.Transparent;
             this.lblNavSection.AutoSize  = true;
-            this.lblNavSection.Location  = new Point(Theme.SpaceLG, 108);
+            this.lblNavSection.Location  = new Point(Theme.SpaceLG, pnlDividerTop.Bottom + 15);
 
             // Navigation Buttons
-            SetupNavButton(btnBooths,    "🏪  Booths",    138, BtnBooths_Click);
-            SetupNavButton(btnTalkshows, "🎤  Talkshows", 192, BtnTalkshows_Click);
-            SetupNavButton(btnTickets,   "🎫  Tickets",   246, BtnTickets_Click);
+            int startY = lblNavSection.Bottom + 15;
+            SetupNavButton(btnBooths,    "🏪  Booths",    startY, BtnBooths_Click);
+            SetupNavButton(btnTalkshows, "🎤  Talkshows", startY + 54, BtnTalkshows_Click);
+            SetupNavButton(btnTickets,   "🎫  Tickets",   startY + 108, BtnTickets_Click);
 
             // Bottom Divider
             this.pnlDividerBottom.Size      = new Size(228, 1);
@@ -123,7 +133,7 @@ namespace WinformsGUI.Views.Main
 
             // Compose Sidebar
             this.pnlSidebar.Controls.AddRange(new Control[] {
-                lblAppName, lblAppSub, pnlDividerTop, lblNavSection,
+                picLogo, lblAppName, lblAppSub, pnlDividerTop, lblNavSection,
                 btnBooths, btnTalkshows, btnTickets,
                 pnlDividerBottom, btnLogout, lblFooter
             });
@@ -147,7 +157,7 @@ namespace WinformsGUI.Views.Main
             btn.BackColor = Color.Transparent;
             btn.ForeColor = Theme.TextSecondary;
             btn.FlatAppearance.BorderSize         = 0;
-            btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(36, 124, 111, 247);
+            btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(50, Theme.AccentPrimary);
             btn.Font      = Theme.FontSubhead;
             btn.Cursor    = Cursors.Hand;
             btn.TextAlign = ContentAlignment.MiddleLeft;
@@ -162,8 +172,8 @@ namespace WinformsGUI.Views.Main
                 _activeBtn.BackColor = Color.Transparent;
                 _activeBtn.ForeColor = Theme.TextSecondary;
             }
-            btn.BackColor = Color.FromArgb(48, 124, 111, 247);
-            btn.ForeColor = Theme.AccentPrimary;
+            btn.BackColor = Theme.AccentPrimary;
+            btn.ForeColor = Color.White;
             _activeBtn    = btn;
         }
 

@@ -16,7 +16,6 @@ namespace WinformsGUI.Views.Talkshow
         private Label         lblDescription;
         private RoundedButton btnRefresh;
         private RoundedButton btnAdd;
-        private Panel         pnlDivider;
 
         // Grid
         private DataGridView dgvTalkshows;
@@ -52,7 +51,6 @@ namespace WinformsGUI.Views.Talkshow
             this.btnRefresh     = new RoundedButton();
             this.btnAdd         = new RoundedButton();
             this.txtSearch      = new WinformsGUI.Controls.SearchBar();
-            this.pnlDivider     = new Panel();
             this.dgvTalkshows   = new DataGridView();
 
             this.Text      = "Talkshow Management";
@@ -93,20 +91,18 @@ namespace WinformsGUI.Views.Talkshow
             this.txtSearch.PlaceholderText = "Cari talkshow...";
             this.txtSearch.TextChangedEvent += TxtSearch_TextChanged;
 
-            // ── Divider ─────────────────────────────────────────────────────
-            this.pnlDivider.BackColor = Theme.BorderSoft;
-            this.pnlDivider.Size      = new Size(10, 1);
-
             // ── DataGridView ────────────────────────────────────────────────
             Theme.ApplyToDataGridView(this.dgvTalkshows);
             this.dgvTalkshows.CellPainting   += DgvTs_CellPainting;
             this.dgvTalkshows.CellMouseClick += DgvTs_CellMouseClick;
+            this.dgvTalkshows.Paint          += (s, e) => Theme.DrawEmptyState(dgvTalkshows, e, "Tidak ada data talkshow yang ditemukan.");
             this.dgvTalkshows.CellMouseEnter += (s, e) => UpdateCursor(e.ColumnIndex);
             this.dgvTalkshows.CellMouseLeave += (s, e) => { this.dgvTalkshows.Cursor = Cursors.Default; };
             this.dgvTalkshows.CellFormatting += DgvTs_CellFormatting;
 
+            // ── Compose ─────────────────────────────────────────────────────
             this.Controls.AddRange(new Control[] {
-                lblTitle, lblDescription, txtSearch, btnRefresh, btnAdd, pnlDivider, dgvTalkshows
+                lblTitle, lblDescription, txtSearch, btnRefresh, btnAdd, dgvTalkshows
             });
 
             this.Resize += (s, e) => RepositionControls();
@@ -127,23 +123,19 @@ namespace WinformsGUI.Views.Talkshow
             int w = this.ClientSize.Width;
             int h = this.ClientSize.Height;
 
-            int headerBlockH = TitleH + 6 + DescH;
-            int rowY         = M;
+            int headerBlockH = TitleH + 8 + DescH;
+            int rowY         = 102;
             int btnY         = rowY + (headerBlockH - BtnH) / 2;
 
             this.lblTitle.Location       = new Point(M, rowY);
-            this.lblDescription.Location = new Point(M, rowY + TitleH + 6);
+            this.lblDescription.Location = new Point(M, rowY + TitleH + 8);
 
             this.btnAdd.Location     = new Point(w - M - btnAdd.Width, btnY);
             this.btnRefresh.Location = new Point(btnAdd.Left - Theme.SpaceSM - btnRefresh.Width,
                                                  btnY + (BtnH - btnRefresh.Height) / 2);
             this.txtSearch.Location  = new Point(btnRefresh.Left - Theme.SpaceLG - txtSearch.Width, btnY + (BtnH - txtSearch.Height) / 2);
 
-            int divY = rowY + headerBlockH + Theme.SpaceSM;
-            this.pnlDivider.Location = new Point(M, divY);
-            this.pnlDivider.Size     = new Size(w - M * 2, 1);
-
-            int dgvY = divY + 1 + Theme.SpaceSM;
+            int dgvY = rowY + headerBlockH + 48;
             this.dgvTalkshows.Location = new Point(M, dgvY);
             this.dgvTalkshows.Size     = new Size(w - M * 2, Math.Max(0, h - dgvY - M));
         }

@@ -16,7 +16,6 @@ namespace WinformsGUI.Views.Booth
         private Label         lblDescription;
         private RoundedButton btnRefresh;
         private RoundedButton btnAdd;
-        private Panel         pnlDivider;
 
         // Grid
         private DataGridView dgvBooths;
@@ -53,7 +52,6 @@ namespace WinformsGUI.Views.Booth
             this.btnRefresh    = new RoundedButton();
             this.btnAdd        = new RoundedButton();
             this.txtSearch     = new WinformsGUI.Controls.SearchBar();
-            this.pnlDivider    = new Panel();
             this.dgvBooths     = new DataGridView();
 
             this.Text      = "Booth Management";
@@ -95,20 +93,17 @@ namespace WinformsGUI.Views.Booth
             this.txtSearch.PlaceholderText = "Cari booth...";
             this.txtSearch.TextChangedEvent += TxtSearch_TextChanged;
 
-            // ── Divider ─────────────────────────────────────────────────────
-            this.pnlDivider.BackColor = Theme.BorderSoft;
-            this.pnlDivider.Size      = new Size(10, 1);
-
-            // ── DataGridView ────────────────────────────────────────────────
+        // ── DataGridView ────────────────────────────────────────────────
             Theme.ApplyToDataGridView(this.dgvBooths);
             this.dgvBooths.CellPainting   += DgvBooths_CellPainting;
             this.dgvBooths.CellMouseClick += DgvBooths_CellMouseClick;
+            this.dgvBooths.Paint          += (s, e) => Theme.DrawEmptyState(dgvBooths, e, "Tidak ada data booth yang ditemukan.");
             this.dgvBooths.CellMouseEnter += (s, e) => UpdateCursor(e.ColumnIndex);
             this.dgvBooths.CellMouseLeave += (s, e) => { this.dgvBooths.Cursor = Cursors.Default; };
 
             // ── Compose ─────────────────────────────────────────────────────
             this.Controls.AddRange(new Control[] {
-                lblTitle, lblDescription, txtSearch, btnRefresh, btnAdd, pnlDivider, dgvBooths
+                lblTitle, lblDescription, txtSearch, btnRefresh, btnAdd, dgvBooths
             });
 
             this.Resize += (s, e) => RepositionControls();
@@ -130,25 +125,20 @@ namespace WinformsGUI.Views.Booth
             int h = this.ClientSize.Height;
 
             // Header row: title (left) | buttons (right), vertically centered
-            int headerBlockH = TitleH + 6 + DescH;           // ≈ 64
-            int rowY         = M;                              // top of header row
+            int headerBlockH = TitleH + 8 + DescH;
+            int rowY         = 102;                              // top of header row (aligns with sidebar title)
             int btnY         = rowY + (headerBlockH - BtnH) / 2; // vertically centered
 
             this.lblTitle.Location       = new Point(M, rowY);
-            this.lblDescription.Location = new Point(M, rowY + TitleH + 6);
+            this.lblDescription.Location = new Point(M, rowY + TitleH + 8);
 
             // Buttons right-aligned
             this.btnAdd.Location     = new Point(w - M - btnAdd.Width, btnY);
             this.btnRefresh.Location = new Point(btnAdd.Left - Theme.SpaceSM - btnRefresh.Width, btnY + (BtnH - btnRefresh.Height) / 2);
             this.txtSearch.Location  = new Point(btnRefresh.Left - Theme.SpaceLG - txtSearch.Width, btnY + (BtnH - txtSearch.Height) / 2);
 
-            // Divider
-            int divY = rowY + headerBlockH + Theme.SpaceSM;
-            this.pnlDivider.Location = new Point(M, divY);
-            this.pnlDivider.Size     = new Size(w - M * 2, 1);
-
-            // DataGridView (fills remaining space)
-            int dgvY = divY + 1 + Theme.SpaceSM;
+            // DataGridView (fills remaining space with larger top gap)
+            int dgvY = rowY + headerBlockH + 48; // 48px gap instead of divider
             this.dgvBooths.Location = new Point(M, dgvY);
             this.dgvBooths.Size     = new Size(w - M * 2, Math.Max(0, h - dgvY - M));
         }

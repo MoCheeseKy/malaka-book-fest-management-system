@@ -16,7 +16,6 @@ namespace WinformsGUI.Views.Ticket
         private Label         lblDescription;
         private RoundedButton btnRefresh;
         private WinformsGUI.Controls.SearchBar txtSearch;
-        private Panel         pnlDivider;
 
         // Grid + Scan card
         private DataGridView  dgvTickets;
@@ -48,7 +47,6 @@ namespace WinformsGUI.Views.Ticket
             this.lblDescription   = new Label();
             this.btnRefresh       = new RoundedButton();
             this.txtSearch        = new WinformsGUI.Controls.SearchBar();
-            this.pnlDivider       = new Panel();
             this.dgvTickets       = new DataGridView();
             this.pnlScanCard      = new Panel();
             this.lblScanTitle     = new Label();
@@ -87,9 +85,6 @@ namespace WinformsGUI.Views.Ticket
             this.txtSearch.PlaceholderText = "Cari tiket...";
             this.txtSearch.TextChangedEvent += TxtSearch_TextChanged;
 
-            this.pnlDivider.BackColor = Theme.BorderSoft;
-            this.pnlDivider.Size      = new Size(10, 1);
-
             // ── Scan Card ─────────────────────────────────────────────────
             this.pnlScanCard.BackColor = Theme.BgSurface;
 
@@ -123,13 +118,15 @@ namespace WinformsGUI.Views.Ticket
             this.txtTicketId.PlaceholderText= "xxxx-xxxx-xxxx-xxxx";
 
             int scanBtnY = M + 38 + 54 + Theme.SpaceSM + 2 + 34 + Theme.SpaceMD;
-            this.btnScan.Text         = "🔍  Scan & Verifikasi";
+            this.btnScan.Text         = "Scan & Verifikasi";
             this.btnScan.Size         = new Size(230, 48);
             this.btnScan.Location     = new Point(M, scanBtnY);
             this.btnScan.Font         = Theme.FontSubhead;
             this.btnScan.CornerRadius = Theme.RadiusButton;
             Theme.ApplyToAccentButton(this.btnScan);
             this.btnScan.Click       += BtnScan_Click;
+
+            this.dgvTickets.Paint    += (s, e) => Theme.DrawEmptyState(dgvTickets, e, "Tidak ada data tiket yang ditemukan.");
 
             this.lblScanResult.Text      = "";
             this.lblScanResult.Font      = Theme.FontSmall;
@@ -148,7 +145,7 @@ namespace WinformsGUI.Views.Ticket
             Theme.ApplyToDataGridView(this.dgvTickets);
 
             this.Controls.AddRange(new Control[] {
-                lblTitle, lblDescription, txtSearch, btnRefresh, pnlDivider, pnlScanCard, dgvTickets
+                lblTitle, lblDescription, txtSearch, btnRefresh, pnlScanCard, dgvTickets
             });
 
             this.Resize += (s, e) => RepositionControls();
@@ -161,24 +158,20 @@ namespace WinformsGUI.Views.Ticket
             int h = this.ClientSize.Height;
 
             // Header row
-            int headerBlockH = TitleH + 6 + DescH;
-            int rowY = M;
+            int headerBlockH = TitleH + 8 + DescH;
+            int rowY = 102;
 
             this.lblTitle.Location       = new Point(M, rowY);
-            this.lblDescription.Location = new Point(M, rowY + TitleH + 6);
+            this.lblDescription.Location = new Point(M, rowY + TitleH + 8);
 
             this.btnRefresh.Location = new Point(w - M - btnRefresh.Width,
                                                  rowY + (headerBlockH - btnRefresh.Height) / 2);
             this.txtSearch.Location  = new Point(btnRefresh.Left - Theme.SpaceLG - txtSearch.Width,
                                                  rowY + (headerBlockH - txtSearch.Height) / 2);
 
-            int divY = rowY + headerBlockH + Theme.SpaceSM;
-            this.pnlDivider.Location = new Point(M, divY);
-            this.pnlDivider.Size     = new Size(w - M * 2, 1);
-
             // Scan card (right side)
             int cardW  = 278;
-            int dgvY   = divY + 1 + Theme.SpaceSM;
+            int dgvY   = rowY + headerBlockH + 48;
             int dgvH   = Math.Max(0, h - dgvY - M);
 
             this.pnlScanCard.Location = new Point(w - M - cardW, dgvY);

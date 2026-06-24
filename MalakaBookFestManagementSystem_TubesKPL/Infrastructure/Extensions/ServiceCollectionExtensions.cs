@@ -17,17 +17,19 @@ namespace MalakaBookFest.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+    private static readonly INpgsqlNameTranslator _nullTranslator = new NpgsqlNullNameTranslator();
+
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
         IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"), o => o
-                .MapEnum<UserRole>("user_role", nameTranslator: new NpgsqlNullNameTranslator())
-                .MapEnum<BoothCategory>("booth_category", nameTranslator: new NpgsqlNullNameTranslator())
-                .MapEnum<TalkshowStatus>("talkshow_status", nameTranslator: new NpgsqlNullNameTranslator())
-                .MapEnum<TicketType>("ticket_type", nameTranslator: new NpgsqlNullNameTranslator())
-                .MapEnum<TicketStatus>("ticket_status", nameTranslator: new NpgsqlNullNameTranslator())
+                .MapEnum<UserRole>("user_role", nameTranslator: _nullTranslator)
+                .MapEnum<BoothCategory>("booth_category", nameTranslator: _nullTranslator)
+                .MapEnum<TalkshowStatus>("talkshow_status", nameTranslator: _nullTranslator)
+                .MapEnum<TicketType>("ticket_type", nameTranslator: _nullTranslator)
+                .MapEnum<TicketStatus>("ticket_status", nameTranslator: _nullTranslator)
             ));
 
         services.Configure<JwtConfig>(configuration.GetSection("JwtConfig"));

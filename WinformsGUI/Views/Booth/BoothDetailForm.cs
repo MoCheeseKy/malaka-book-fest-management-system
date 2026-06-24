@@ -107,8 +107,8 @@ namespace WinformsGUI.Views.Booth
 
             // ── Books Section Header ────────────────────────────────────────
             this.lblBooksSection.Text      = "DAFTAR BUKU";
-            this.lblBooksSection.Font      = Theme.FontSmall;
-            this.lblBooksSection.ForeColor = Theme.TextMuted;
+            this.lblBooksSection.Font      = Theme.FontSubhead;
+            this.lblBooksSection.ForeColor = Color.White;
             this.lblBooksSection.BackColor = Color.Transparent;
             this.lblBooksSection.AutoSize  = true;
 
@@ -139,6 +139,7 @@ namespace WinformsGUI.Views.Booth
             Theme.ApplyToDataGridView(this.dgvBooks);
             this.dgvBooks.CellPainting   += DgvBooks_CellPainting;
             this.dgvBooks.CellMouseClick += DgvBooks_CellMouseClick;
+            this.dgvBooks.Paint          += (s, e) => Theme.DrawEmptyState(dgvBooks, e, "Tidak ada data buku di booth ini.");
             this.dgvBooks.CellMouseEnter += (s, e) => UpdateCursor(e.ColumnIndex);
             this.dgvBooks.CellMouseLeave += (s, e) => { this.dgvBooks.Cursor = Cursors.Default; };
 

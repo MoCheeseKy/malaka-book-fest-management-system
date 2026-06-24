@@ -13,26 +13,26 @@ namespace WinformsGUI.Utils
     public static class Theme
     {
         // ── Color Tokens ─────────────────────────────────────────────────────
-        public static readonly Color BgDeep    = Color.FromArgb(30, 30, 46);   // #1E1E2E
-        public static readonly Color BgSurface = Color.FromArgb(42, 42, 62);   // #2A2A3E
-        public static readonly Color BgCard    = Color.FromArgb(49, 49, 73);   // #313149
-        public static readonly Color BgInput   = Color.FromArgb(38, 38, 58);   // #26263A
+        public static readonly Color BgDeep    = Color.FromArgb(18, 18, 20);   // Off-black
+        public static readonly Color BgSurface = Color.FromArgb(24, 24, 28);   // Dark gray
+        public static readonly Color BgCard    = Color.FromArgb(32, 32, 36);   // Lighter gray
+        public static readonly Color BgInput   = Color.FromArgb(18, 18, 20);   // Off-black
 
-        public static readonly Color AccentPrimary      = Color.FromArgb(124, 111, 247); // #7C6FF7
-        public static readonly Color AccentPrimaryHover = Color.FromArgb(101, 88,  220); // #6558DC
-        public static readonly Color AccentPrimaryPress = Color.FromArgb( 80, 68,  190);
-        public static readonly Color AccentSecond       = Color.FromArgb( 93, 201, 168); // #5DC9A8
-        public static readonly Color AccentSecondHover  = Color.FromArgb( 72, 175, 145);
-        public static readonly Color AccentSuccess      = Color.FromArgb( 93, 201, 168); // Same as AccentSecond
-        public static readonly Color AccentDanger       = Color.FromArgb(224, 123, 123); // #E07B7B
-        public static readonly Color AccentDangerHover  = Color.FromArgb(200,  95,  95);
+        public static readonly Color AccentPrimary      = Color.FromArgb(40, 90, 140); // Soft navy blue derived from logo
+        public static readonly Color AccentPrimaryHover = Color.FromArgb(55, 110, 165); 
+        public static readonly Color AccentPrimaryPress = Color.FromArgb(25, 70, 115);
+        public static readonly Color AccentSecond       = Color.FromArgb(210, 160, 114); // Gold/Beige derived from logo icon
+        public static readonly Color AccentSecondHover  = Color.FromArgb(225, 175, 129);
+        public static readonly Color AccentSuccess      = Color.FromArgb(60, 180, 130);
+        public static readonly Color AccentDanger       = Color.FromArgb(220, 90, 90); 
+        public static readonly Color AccentDangerHover  = Color.FromArgb(200, 75, 75);
 
-        public static readonly Color TextPrimary   = Color.FromArgb(232, 230, 240); // #E8E6F0
-        public static readonly Color TextSecondary = Color.FromArgb(160, 156, 184); // #A09CB8
-        public static readonly Color TextMuted     = Color.FromArgb(107, 104, 130); // #6B6882
+        public static readonly Color TextPrimary   = Color.FromArgb(240, 240, 245);
+        public static readonly Color TextSecondary = Color.FromArgb(170, 170, 180);
+        public static readonly Color TextMuted     = Color.FromArgb(110, 110, 120);
 
-        public static readonly Color BorderSoft   = Color.FromArgb(61, 59, 92);    // #3D3B5C
-        public static readonly Color BorderActive = Color.FromArgb(124, 111, 247);
+        public static readonly Color BorderSoft   = Color.FromArgb(45, 45, 50);
+        public static readonly Color BorderActive = Color.FromArgb(40, 90, 140);
 
         // ── Typography (semua ukuran kelipatan genap) ─────────────────────────
         public static readonly Font FontTitle     = new Font("Segoe UI", 22F, FontStyle.Bold,    GraphicsUnit.Point);
@@ -280,9 +280,6 @@ namespace WinformsGUI.Utils
             dgv.DefaultCellStyle.SelectionForeColor= AccentPrimary;
             dgv.DefaultCellStyle.Font              = FontBody;
             dgv.DefaultCellStyle.Padding           = new Padding(SpaceSM, 0, SpaceSM, 0);
-            dgv.AlternatingRowsDefaultCellStyle.BackColor         = Color.FromArgb(45, 45, 67);
-            dgv.AlternatingRowsDefaultCellStyle.SelectionBackColor= BgCard;
-            dgv.AlternatingRowsDefaultCellStyle.SelectionForeColor= AccentPrimary;
             dgv.RowTemplate.Height = 46;
 
             dgv.AutoSizeColumnsMode  = DataGridViewAutoSizeColumnsMode.Fill;
@@ -296,6 +293,24 @@ namespace WinformsGUI.Utils
         public static Panel MakeDivider(int width)
         {
             return new Panel { Size = new Size(width, 1), BackColor = BorderSoft };
+        }
+
+        public static void DrawEmptyState(DataGridView dgv, PaintEventArgs e, string message)
+        {
+            if (dgv.Rows.Count == 0)
+            {
+                using (var brush = new SolidBrush(Theme.TextMuted))
+                {
+                    var format = new StringFormat
+                    {
+                        Alignment = StringAlignment.Center,
+                        LineAlignment = StringAlignment.Center
+                    };
+                    
+                    var rect = new RectangleF(0, dgv.ColumnHeadersHeight, dgv.Width, dgv.Height - dgv.ColumnHeadersHeight);
+                    e.Graphics.DrawString(message, Theme.FontSubhead, brush, rect, format);
+                }
+            }
         }
     }
 }
