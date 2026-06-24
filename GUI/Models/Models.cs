@@ -101,4 +101,13 @@ namespace GUI.Models
         public string? Message { get; set; }
         public IEnumerable<string>? Errors { get; set; }
     }
+
+    public class LoginResponse
+    {
+        public string Token { get; set; } = string.Empty;
+        public Guid UserId { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public UserRole Role { get; set; }
+    }
 }

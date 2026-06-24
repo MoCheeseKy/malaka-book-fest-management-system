@@ -13,11 +13,27 @@ namespace GUI.Services
         private readonly HttpClient _httpClient;
         private readonly JsonSerializerOptions _jsonOptions;
 
+        public static string? Token { get; set; }
+
         public ApiService()
         {
             // Base URL based on launchSettings.json of the API
             _httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:5278/api/") };
             _jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            EnsureAuthHeader();
+        }
+
+        private void EnsureAuthHeader()
+        {
+            if (!string.IsNullOrEmpty(Token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = 
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+            }
+            else
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = null;
+            }
         }
 
         // --- Booth ---
@@ -149,9 +165,45 @@ namespace GUI.Services
 
         public async Task<Ticket?> ScanTicketAsync(string qrCode)
         {
+            EnsureAuthHeader();
             var response = await _httpClient.PostAsync($"Ticket/scan?qrCode={Uri.EscapeDataString(qrCode)}", null);
             response.EnsureSuccessStatusCode();
             var res = await response.Content.ReadFromJsonAsync<ApiResponse<Ticket>>(_jsonOptions);
+            return res?.Data;
+        }
+
+        // --- Auth ---
+        public async Task<LoginResponse?> LoginAsync(string email, string password)
+        {
+            var response = await _httpClient.PostAsJsonAsync("Auth/login", new { Email = email, Password = password });
+            if (!response.IsSuccessStatusCode)
+            {
+                var errContent = await response.Content.ReadFromJsonAsync<ApiResponse<object>>(_jsonOptions);
+                throw new Exception(errContent?.Message ?? "Login failed.");
+            }
+            var res = await response.Content.ReadFromJsonAsync<ApiResponse<LoginResponse>>(_jsonOptions);
+            if (res?.Data != null)
+            {
+                Token = res.Data.Token;
+                EnsureAuthHeader();
+            }
+            return res?.Data;
+        }
+
+        public async Task<LoginResponse?> RegisterAsync(string email, string password, string fullName)
+        {
+            var response = await _httpClient.PostAsJsonAsync("Auth/register", new { Email = email, Password = password, FullName = fullName });
+            if (!response.IsSuccessStatusCode)
+            {
+                var errContent = await response.Content.ReadFromJsonAsync<ApiResponse<object>>(_jsonOptions);
+                throw new Exception(errContent?.Message ?? "Registration failed.");
+            }
+            var res = await response.Content.ReadFromJsonAsync<ApiResponse<LoginResponse>>(_jsonOptions);
+            if (res?.Data != null)
+            {
+                Token = res.Data.Token;
+                EnsureAuthHeader();
+            }
             return res?.Data;
         }
     }

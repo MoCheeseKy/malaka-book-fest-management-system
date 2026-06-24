@@ -31,4 +31,12 @@ namespace GUI.Models
         AllAccess,
         VIP
     }
+
+    public enum UserRole
+    {
+        Guest,
+        Attendee,
+        Organizer,
+        Admin
+    }
 }
