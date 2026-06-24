@@ -43,7 +43,7 @@ public class ExceptionMiddleware
             DbUpdateConcurrencyException       => (HttpStatusCode.Conflict, "The resource was updated by another process. Please retry."),
             DbUpdateException                  => (HttpStatusCode.Conflict, "The requested change could not be saved."),
             OperationCanceledException         => (HttpStatusCode.RequestTimeout, "The request was cancelled."),
-            _                                  => (HttpStatusCode.InternalServerError, "An unexpected error occurred.")
+            _                                  => (HttpStatusCode.InternalServerError, exception.ToString())
         };
 
         context.Response.ContentType = "application/json";
