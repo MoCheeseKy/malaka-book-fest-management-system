@@ -33,11 +33,11 @@ namespace WinformsGUI.Views.Booth
 
         private bool _columnsInitialized;
 
-        private const int M       = Theme.SpaceLG;
-        private const int TitleH  = 36;
-        private const int MetaH   = 22;
-        private const int BtnH    = 44;
-        private const int SecLblH = 22;
+        private const int Margin       = Theme.SpaceLG;
+        private const int TitleHeight  = 36;
+        private const int MetaHeight   = 22;
+        private const int ButtonHeight = 44;
+        private const int SectionLabelHeight = 22;
 
         private const int AksiPadX = 5;
         private const int AksiPadY = 6;
@@ -99,7 +99,7 @@ namespace WinformsGUI.Views.Booth
             this.lblBoothMeta.ForeColor = Theme.TextMuted;
             this.lblBoothMeta.BackColor = Color.Transparent;
             this.lblBoothMeta.AutoSize  = false;
-            this.lblBoothMeta.Height    = MetaH;
+            this.lblBoothMeta.Height    = MetaHeight;
 
             // ── Divider 1 ───────────────────────────────────────────────────
             this.pnlDivider.BackColor = Theme.BorderSoft;
@@ -120,7 +120,7 @@ namespace WinformsGUI.Views.Booth
             this.btnRefresh.Click       += (s, e) => LoadBooks();
 
             this.btnAddBook.Text         = "+  Tambah Buku";
-            this.btnAddBook.Size         = new Size(160, BtnH);
+            this.btnAddBook.Size         = new Size(160, ButtonHeight);
             this.btnAddBook.Font         = Theme.FontSubhead;
             this.btnAddBook.CornerRadius = Theme.RadiusButton;
             Theme.ApplyToButton(this.btnAddBook);
@@ -164,38 +164,38 @@ namespace WinformsGUI.Views.Booth
 
         private void RepositionControls()
         {
-            int w = this.ClientSize.Width;
-            int h = this.ClientSize.Height;
+            int width = this.ClientSize.Width;
+            int height = this.ClientSize.Height;
 
             // Section 1: Booth info
-            this.lblBoothName.Location = new Point(M, M);
-            this.pnlStatusChip.Location = new Point(this.lblBoothName.Right + Theme.SpaceMD, M + (TitleH - this.pnlStatusChip.Height) / 2);
-            this.lblBoothMeta.Location = new Point(M, M + TitleH + 6);
-            this.lblBoothMeta.Width    = w - M * 2;
+            this.lblBoothName.Location = new Point(Margin, Margin);
+            this.pnlStatusChip.Location = new Point(this.lblBoothName.Right + Theme.SpaceMD, Margin + (TitleHeight - this.pnlStatusChip.Height) / 2);
+            this.lblBoothMeta.Location = new Point(Margin, Margin + TitleHeight + 6);
+            this.lblBoothMeta.Width    = width - Margin * 2;
 
-            int div1Y = M + TitleH + 6 + MetaH + Theme.SpaceSM;
-            this.pnlDivider.Location = new Point(M, div1Y);
-            this.pnlDivider.Size     = new Size(w - M * 2, 1);
+            int div1Y = Margin + TitleHeight + 6 + MetaHeight + Theme.SpaceSM;
+            this.pnlDivider.Location = new Point(Margin, div1Y);
+            this.pnlDivider.Size     = new Size(width - Margin * 2, 1);
 
             // Section 2: Books header row
             int sec2Y   = div1Y + 1 + Theme.SpaceMD;
-            int secBtnH = Math.Max(SecLblH, BtnH);
+            int secBtnH = Math.Max(SectionLabelHeight, ButtonHeight);
 
-            this.lblBooksSection.Location = new Point(M, sec2Y + (secBtnH - SecLblH) / 2);
-            this.btnAddBook.Location      = new Point(w - M - btnAddBook.Width, sec2Y + (secBtnH - BtnH) / 2);
+            this.lblBooksSection.Location = new Point(Margin, sec2Y + (secBtnH - SectionLabelHeight) / 2);
+            this.btnAddBook.Location      = new Point(width - Margin - btnAddBook.Width, sec2Y + (secBtnH - ButtonHeight) / 2);
             this.btnRefresh.Location      = new Point(btnAddBook.Left - Theme.SpaceSM - btnRefresh.Width,
                                                       sec2Y + (secBtnH - btnRefresh.Height) / 2);
             this.txtSearch.Location       = new Point(btnRefresh.Left - Theme.SpaceLG - txtSearch.Width,
                                                       sec2Y + (secBtnH - txtSearch.Height) / 2);
 
             int div2Y = sec2Y + secBtnH + Theme.SpaceSM;
-            this.pnlDivider2.Location = new Point(M, div2Y);
-            this.pnlDivider2.Size     = new Size(w - M * 2, 1);
+            this.pnlDivider2.Location = new Point(Margin, div2Y);
+            this.pnlDivider2.Size     = new Size(width - Margin * 2, 1);
 
             // DataGridView
             int dgvY = div2Y + 1 + Theme.SpaceSM;
-            this.dgvBooks.Location = new Point(M, dgvY);
-            this.dgvBooks.Size     = new Size(w - M * 2, Math.Max(0, h - dgvY - M));
+            this.dgvBooks.Location = new Point(Margin, dgvY);
+            this.dgvBooks.Size     = new Size(width - Margin * 2, Math.Max(0, height - dgvY - Margin));
         }
 
         // ── Cell Painting ───────────────────────────────────────────────────
@@ -207,15 +207,15 @@ namespace WinformsGUI.Views.Booth
                                   DataGridViewPaintParts.SelectionBackground |
                                   DataGridViewPaintParts.Border);
 
-            int btnH = e.CellBounds.Height - AksiPadY * 2;
+            int buttonHeight = e.CellBounds.Height - AksiPadY * 2;
             int x0   = e.CellBounds.X + AksiPadX;
             int y0   = e.CellBounds.Y + AksiPadY;
 
-            Theme.DrawGridActionButton(e.Graphics, new RectangleF(x0, y0, AksiBtnW, btnH),
+            Theme.DrawGridActionButton(e.Graphics, new RectangleF(x0, y0, AksiBtnW, buttonHeight),
                 "✎  Edit", Theme.AccentPrimary, Theme.TextPrimary);
-            Theme.DrawGridActionButton(e.Graphics, new RectangleF(x0 + AksiBtnW + AksiGap, y0, AksiBtnW, btnH),
+            Theme.DrawGridActionButton(e.Graphics, new RectangleF(x0 + AksiBtnW + AksiGap, y0, AksiBtnW, buttonHeight),
                 "✕  Hapus", Theme.AccentDanger, Theme.TextPrimary);
-            Theme.DrawGridActionButton(e.Graphics, new RectangleF(x0 + (AksiBtnW + AksiGap) * 2, y0, AksiBtnW, btnH),
+            Theme.DrawGridActionButton(e.Graphics, new RectangleF(x0 + (AksiBtnW + AksiGap) * 2, y0, AksiBtnW, buttonHeight),
                 "◎  Detail", Theme.BgCard, Theme.TextSecondary);
 
             e.Handled = true;
@@ -225,10 +225,10 @@ namespace WinformsGUI.Views.Booth
         {
             if (e.RowIndex < 0 || dgvBooks.Columns[e.ColumnIndex].Name != "colAksi") return;
 
-            int x = e.X;
-            if      (x >= AksiPadX && x < AksiPadX + AksiBtnW)                           BtnEdit_Action(e.RowIndex);
-            else if (x >= AksiPadX + AksiBtnW + AksiGap && x < AksiPadX + (AksiBtnW + AksiGap) * 2) BtnDelete_Action(e.RowIndex);
-            else if (x >= AksiPadX + (AksiBtnW + AksiGap) * 2)                            BtnDetail_Action(e.RowIndex);
+            int positionX = e.X;
+            if      (positionX >= AksiPadX && positionX < AksiPadX + AksiBtnW)                           BtnEdit_Action(e.RowIndex);
+            else if (positionX >= AksiPadX + AksiBtnW + AksiGap && positionX < AksiPadX + (AksiBtnW + AksiGap) * 2) BtnDelete_Action(e.RowIndex);
+            else if (positionX >= AksiPadX + (AksiBtnW + AksiGap) * 2)                            BtnDetail_Action(e.RowIndex);
         }
 
         // ── Data Loading ────────────────────────────────────────────────────

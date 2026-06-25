@@ -79,8 +79,8 @@ namespace WinformsGUI.Views.Booth
             this.MaximizeBox     = false;
             this.StartPosition   = FormStartPosition.CenterParent;
 
-            int x = Theme.SpaceLG, w = 380;
-            int y = Theme.SpaceLG;
+            int positionX = Theme.SpaceLG, cardWidth = 380;
+            int positionY = Theme.SpaceLG;
 
             // Title
             this.lblTitle.Text      = "Tambah Booth Baru";
@@ -88,75 +88,75 @@ namespace WinformsGUI.Views.Booth
             this.lblTitle.ForeColor = Theme.TextPrimary;
             this.lblTitle.BackColor = Color.Transparent;
             this.lblTitle.AutoSize  = true;
-            this.lblTitle.Location  = new Point(x, y);
-            y += 38;
+            this.lblTitle.Location  = new Point(positionX, positionY);
+            positionY += 38;
 
             this.lblSubtitle.Text      = "Isi detail informasi booth";
             this.lblSubtitle.Font      = Theme.FontSmall;
             this.lblSubtitle.ForeColor = Theme.TextMuted;
             this.lblSubtitle.BackColor = Color.Transparent;
             this.lblSubtitle.AutoSize  = true;
-            this.lblSubtitle.Location  = new Point(x, y);
-            y += 28;
+            this.lblSubtitle.Location  = new Point(positionX, positionY);
+            positionY += 28;
 
             this.pnlDivider.BackColor = Theme.BorderSoft;
-            this.pnlDivider.Size      = new Size(w, 1);
-            this.pnlDivider.Location  = new Point(x, y);
-            y += 1 + Theme.SpaceMD;
+            this.pnlDivider.Size      = new Size(cardWidth, 1);
+            this.pnlDivider.Location  = new Point(positionX, positionY);
+            positionY += 1 + Theme.SpaceMD;
 
             // Name
-            MakeFieldLabel(lblName, "NAMA BOOTH", x, y); y += Theme.SpaceSM + 2;
-            MakeTextBox(txtName, x, y, w, 38); y += 38 + Theme.SpaceMD;
+            MakeFieldLabel(lblName, "NAMA BOOTH", positionX, positionY); positionY += Theme.SpaceSM + 2;
+            MakeTextBox(txtName, positionX, positionY, cardWidth, 38); positionY += 38 + Theme.SpaceMD;
 
             // Description
-            MakeFieldLabel(lblDescription, "DESKRIPSI", x, y); y += Theme.SpaceSM + 2;
-            this.txtDescription.Location    = new Point(x, y);
-            this.txtDescription.Size        = new Size(w, 76);
+            MakeFieldLabel(lblDescription, "DESKRIPSI", positionX, positionY); positionY += Theme.SpaceSM + 2;
+            this.txtDescription.Location    = new Point(positionX, positionY);
+            this.txtDescription.Size        = new Size(cardWidth, 76);
             this.txtDescription.Multiline   = true;
             this.txtDescription.BorderStyle = BorderStyle.FixedSingle;
             this.txtDescription.BackColor   = Theme.BgInput;
             this.txtDescription.ForeColor   = Theme.TextPrimary;
             this.txtDescription.Font        = Theme.FontBody;
-            y += 76 + Theme.SpaceMD;
+            positionY += 76 + Theme.SpaceMD;
 
             // Location
-            MakeFieldLabel(lblLocation, "LOKASI", x, y); y += Theme.SpaceSM + 2;
-            MakeTextBox(txtLocation, x, y, w, 38); y += 38 + Theme.SpaceLG;
+            MakeFieldLabel(lblLocation, "LOKASI", positionX, positionY); positionY += Theme.SpaceSM + 2;
+            MakeTextBox(txtLocation, positionX, positionY, cardWidth, 38); positionY += 38 + Theme.SpaceLG;
 
             // Category
-            MakeFieldLabel(lblCategory, "KATEGORI", x, y); y += Theme.SpaceSM + 2;
-            this.cmbCategory.Location     = new Point(x, y);
-            this.cmbCategory.Size         = new Size(w, 38);
+            MakeFieldLabel(lblCategory, "KATEGORI", positionX, positionY); positionY += Theme.SpaceSM + 2;
+            this.cmbCategory.Location     = new Point(positionX, positionY);
+            this.cmbCategory.Size         = new Size(cardWidth, 38);
             this.cmbCategory.DropDownStyle= ComboBoxStyle.DropDownList;
             this.cmbCategory.BackColor    = Theme.BgInput;
             this.cmbCategory.ForeColor    = Theme.TextPrimary;
             this.cmbCategory.Font         = Theme.FontBody;
             this.cmbCategory.Items.AddRange(new string[] { "Publisher", "Indie Author", "Merchandise", "Food & Beverage", "Other" });
-            y += 38 + Theme.SpaceMD;
+            positionY += 38 + Theme.SpaceMD;
 
             // Status (IsActive)
-            this.chkIsActive.Location     = new Point(x, y);
-            this.chkIsActive.Size         = new Size(w, 24);
+            this.chkIsActive.Location     = new Point(positionX, positionY);
+            this.chkIsActive.Size         = new Size(cardWidth, 24);
             this.chkIsActive.Text         = "Booth Aktif";
             this.chkIsActive.Font         = Theme.FontBody;
             this.chkIsActive.ForeColor    = Theme.TextPrimary;
             this.chkIsActive.BackColor    = Color.Transparent;
             this.chkIsActive.Cursor       = Cursors.Hand;
-            y += 24 + Theme.SpaceLG;
+            positionY += 24 + Theme.SpaceLG;
 
             // Buttons
-            int btnW = (w - Theme.SpaceSM) / 2;
+            int buttonWidth = (cardWidth - Theme.SpaceSM) / 2;
             this.btnSave.Text         = "Simpan";
-            this.btnSave.Size         = new Size(btnW, 48);
-            this.btnSave.Location     = new Point(x, y);
+            this.btnSave.Size         = new Size(buttonWidth, 48);
+            this.btnSave.Location     = new Point(positionX, positionY);
             this.btnSave.Font         = Theme.FontSubhead;
             this.btnSave.CornerRadius = Theme.RadiusButton;
             Theme.ApplyToButton(this.btnSave);
             this.btnSave.Click       += BtnSave_Click;
 
             this.btnCancel.Text         = "Batal";
-            this.btnCancel.Size         = new Size(btnW, 48);
-            this.btnCancel.Location     = new Point(x + btnW + Theme.SpaceSM, y);
+            this.btnCancel.Size         = new Size(buttonWidth, 48);
+            this.btnCancel.Location     = new Point(positionX + buttonWidth + Theme.SpaceSM, positionY);
             this.btnCancel.Font         = Theme.FontSubhead;
             this.btnCancel.CornerRadius = Theme.RadiusButton;
             Theme.ApplyToSecondaryButton(this.btnCancel);
@@ -170,20 +170,20 @@ namespace WinformsGUI.Views.Booth
             });
         }
 
-        private void MakeFieldLabel(Label lbl, string text, int x, int y)
+        private void MakeFieldLabel(Label lbl, string text, int positionX, int positionY)
         {
             lbl.Text      = text;
             lbl.Font      = Theme.FontLabel;
             lbl.ForeColor = Theme.TextMuted;
             lbl.BackColor = Color.Transparent;
             lbl.AutoSize  = true;
-            lbl.Location  = new Point(x, y);
+            lbl.Location  = new Point(positionX, positionY);
         }
 
-        private void MakeTextBox(TextBox txt, int x, int y, int w, int h)
+        private void MakeTextBox(TextBox txt, int positionX, int positionY, int width, int height)
         {
-            txt.Location    = new Point(x, y);
-            txt.Size        = new Size(w, h);
+            txt.Location    = new Point(positionX, positionY);
+            txt.Size        = new Size(width, height);
             txt.BorderStyle = BorderStyle.FixedSingle;
             txt.BackColor   = Theme.BgInput;
             txt.ForeColor   = Theme.TextPrimary;

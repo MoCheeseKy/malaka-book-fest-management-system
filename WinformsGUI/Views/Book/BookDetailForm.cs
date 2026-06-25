@@ -63,9 +63,9 @@ namespace WinformsGUI.Views.Book
             this.MaximizeBox     = false;
             this.StartPosition   = FormStartPosition.CenterParent;
 
-            int m = Theme.SpaceLG;
-            int w = 440;
-            int y = m;
+            int margin = Theme.SpaceLG;
+            int cardWidth = 440;
+            int positionY = margin;
 
             // Title
             this.lblBookTitle.Text      = "(Title)";
@@ -73,9 +73,9 @@ namespace WinformsGUI.Views.Book
             this.lblBookTitle.ForeColor = Theme.TextPrimary;
             this.lblBookTitle.BackColor = Color.Transparent;
             this.lblBookTitle.AutoSize  = false;
-            this.lblBookTitle.Size      = new Size(w, 38);
-            this.lblBookTitle.Location  = new Point(m, y);
-            y += 38 + 4;
+            this.lblBookTitle.Size      = new Size(cardWidth, 38);
+            this.lblBookTitle.Location  = new Point(margin, positionY);
+            positionY += 38 + 4;
 
             // Author badge
             this.lblBookAuthor.Text      = "✍  (Author)";
@@ -83,14 +83,14 @@ namespace WinformsGUI.Views.Book
             this.lblBookAuthor.ForeColor = Theme.AccentPrimary;
             this.lblBookAuthor.BackColor = Color.Transparent;
             this.lblBookAuthor.AutoSize  = true;
-            this.lblBookAuthor.Location  = new Point(m, y);
-            y += 24 + Theme.SpaceSM;
+            this.lblBookAuthor.Location  = new Point(margin, positionY);
+            positionY += 24 + Theme.SpaceSM;
 
             // Divider
             this.pnlDivider.BackColor = Theme.BorderSoft;
-            this.pnlDivider.Size      = new Size(w, 1);
-            this.pnlDivider.Location  = new Point(m, y);
-            y += 1 + Theme.SpaceMD;
+            this.pnlDivider.Size      = new Size(cardWidth, 1);
+            this.pnlDivider.Location  = new Point(margin, positionY);
+            positionY += 1 + Theme.SpaceMD;
 
             // Section label
             this.lblSectionMeta.Text      = "INFORMASI BUKU";
@@ -98,24 +98,24 @@ namespace WinformsGUI.Views.Book
             this.lblSectionMeta.ForeColor = Theme.TextMuted;
             this.lblSectionMeta.BackColor = Color.Transparent;
             this.lblSectionMeta.AutoSize  = true;
-            this.lblSectionMeta.Location  = new Point(m, y);
-            y += 22 + Theme.SpaceSM;
+            this.lblSectionMeta.Location  = new Point(margin, positionY);
+            positionY += 22 + Theme.SpaceSM;
 
             // Info Card
             this.pnlInfoCard.BackColor = Theme.BgCard;
-            this.pnlInfoCard.Location  = new Point(m, y);
-            this.pnlInfoCard.Size      = new Size(w, 290);
+            this.pnlInfoCard.Location  = new Point(margin, positionY);
+            this.pnlInfoCard.Size      = new Size(cardWidth, 290);
             AddMetaRow(pnlInfoCard, lblPublisherKey, lblPublisherVal, "ISBN",       0);
             AddMetaRow(pnlInfoCard, lblPriceKey,     lblPriceVal,     "Harga",      58);
             AddMetaRow(pnlInfoCard, lblStockKey,     lblStockVal,     "Stok",       116);
             AddMetaRow(pnlInfoCard, lblCoverUrlKey,  lblCoverUrlVal,  "Cover URL",  174);
             AddMetaRow(pnlInfoCard, lblBoothIdKey,   lblBoothIdVal,   "Booth ID",   232);
-            y += 290 + Theme.SpaceLG;
+            positionY += 290 + Theme.SpaceLG;
 
             // Close Button
             this.btnClose.Text         = "Tutup";
-            this.btnClose.Size         = new Size(w, 48);
-            this.btnClose.Location     = new Point(m, y);
+            this.btnClose.Size         = new Size(cardWidth, 48);
+            this.btnClose.Location     = new Point(margin, positionY);
             this.btnClose.Font         = Theme.FontSubhead;
             this.btnClose.CornerRadius = Theme.RadiusButton;
             Theme.ApplyToSecondaryButton(this.btnClose);
@@ -127,7 +127,7 @@ namespace WinformsGUI.Views.Book
             });
         }
 
-        private void AddMetaRow(Panel parent, Label keyLbl, Label valLbl, string key, int y)
+        private void AddMetaRow(Panel parent, Label keyLbl, Label valLbl, string key, int positionY)
         {
             keyLbl.Text      = key;
             keyLbl.Font      = Theme.FontLabel;
@@ -135,7 +135,7 @@ namespace WinformsGUI.Views.Book
             keyLbl.BackColor = Color.Transparent;
             keyLbl.AutoSize  = false;
             keyLbl.Size      = new Size(110, 26);
-            keyLbl.Location  = new Point(Theme.SpaceMD, y + Theme.SpaceMD);
+            keyLbl.Location  = new Point(Theme.SpaceMD, positionY + Theme.SpaceMD);
             keyLbl.TextAlign = ContentAlignment.MiddleLeft;
 
             valLbl.Text      = "—";
@@ -144,12 +144,12 @@ namespace WinformsGUI.Views.Book
             valLbl.BackColor = Color.Transparent;
             valLbl.AutoSize  = false;
             valLbl.Size      = new Size(280, 26);
-            valLbl.Location  = new Point(Theme.SpaceMD + 120, y + Theme.SpaceMD);
+            valLbl.Location  = new Point(Theme.SpaceMD + 120, positionY + Theme.SpaceMD);
             valLbl.TextAlign = ContentAlignment.MiddleLeft;
 
-            if (y > 0)
+            if (positionY > 0)
             {
-                var div = new Panel { Location = new Point(Theme.SpaceMD, y + Theme.SpaceSM), Size = new Size(396, 1), BackColor = Theme.BorderSoft };
+                var div = new Panel { Location = new Point(Theme.SpaceMD, positionY + Theme.SpaceSM), Size = new Size(396, 1), BackColor = Theme.BorderSoft };
                 parent.Controls.Add(div);
             }
             parent.Controls.Add(keyLbl);

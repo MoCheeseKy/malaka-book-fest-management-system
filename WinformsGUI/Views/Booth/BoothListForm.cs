@@ -26,10 +26,10 @@ namespace WinformsGUI.Views.Booth
         private System.Collections.Generic.List<BoothResponse> _allBooths = new();
 
         // Layout constants
-        private const int M       = Theme.SpaceLG;  // margin = 28
-        private const int TitleH  = 36;             // tinggi baris title (FontPageTitle 18F)
-        private const int DescH   = 22;             // tinggi baris deskripsi (FontSmall 10F)
-        private const int BtnH    = 44;             // tinggi tombol
+        private const int Margin       = Theme.SpaceLG;  // margin = 28
+        private const int TitleHeight  = 36;             // tinggi baris title (FontPageTitle 18F)
+        private const int DescriptionHeight   = 22;             // tinggi baris deskripsi (FontSmall 10F)
+        private const int ButtonHeight    = 44;             // tinggi tombol
 
         // Action column geometry (3 buttons: Edit + Delete + Detail)
         private const int AksiPadX = 5;
@@ -82,7 +82,7 @@ namespace WinformsGUI.Views.Booth
 
             // ── Add Button ──────────────────────────────────────────────────
             this.btnAdd.Text          = "+  Tambah";
-            this.btnAdd.Size          = new Size(148, BtnH);
+            this.btnAdd.Size          = new Size(148, ButtonHeight);
             this.btnAdd.Font          = Theme.FontSubhead;
             this.btnAdd.CornerRadius  = Theme.RadiusButton;
             Theme.ApplyToButton(this.btnAdd);
@@ -121,26 +121,26 @@ namespace WinformsGUI.Views.Booth
 
         private void RepositionControls()
         {
-            int w = this.ClientSize.Width;
-            int h = this.ClientSize.Height;
+            int width = this.ClientSize.Width;
+            int height = this.ClientSize.Height;
 
             // Header row: title (left) | buttons (right), vertically centered
-            int headerBlockH = TitleH + 8 + DescH;
+            int headerBlockH = TitleHeight + 8 + DescriptionHeight;
             int rowY         = 102;                              // top of header row (aligns with sidebar title)
-            int btnY         = rowY + (headerBlockH - BtnH) / 2; // vertically centered
+            int buttonPositionY = rowY + (headerBlockH - ButtonHeight) / 2; // vertically centered
 
-            this.lblTitle.Location       = new Point(M, rowY);
-            this.lblDescription.Location = new Point(M, rowY + TitleH + 8);
+            this.lblTitle.Location       = new Point(Margin, rowY);
+            this.lblDescription.Location = new Point(Margin, rowY + TitleHeight + 8);
 
             // Buttons right-aligned
-            this.btnAdd.Location     = new Point(w - M - btnAdd.Width, btnY);
-            this.btnRefresh.Location = new Point(btnAdd.Left - Theme.SpaceSM - btnRefresh.Width, btnY + (BtnH - btnRefresh.Height) / 2);
-            this.txtSearch.Location  = new Point(btnRefresh.Left - Theme.SpaceLG - txtSearch.Width, btnY + (BtnH - txtSearch.Height) / 2);
+            this.btnAdd.Location     = new Point(width - Margin - btnAdd.Width, buttonPositionY);
+            this.btnRefresh.Location = new Point(btnAdd.Left - Theme.SpaceSM - btnRefresh.Width, buttonPositionY + (ButtonHeight - btnRefresh.Height) / 2);
+            this.txtSearch.Location  = new Point(btnRefresh.Left - Theme.SpaceLG - txtSearch.Width, buttonPositionY + (ButtonHeight - txtSearch.Height) / 2);
 
             // DataGridView (fills remaining space with larger top gap)
             int dgvY = rowY + headerBlockH + 48; // 48px gap instead of divider
-            this.dgvBooths.Location = new Point(M, dgvY);
-            this.dgvBooths.Size     = new Size(w - M * 2, Math.Max(0, h - dgvY - M));
+            this.dgvBooths.Location = new Point(Margin, dgvY);
+            this.dgvBooths.Size     = new Size(width - Margin * 2, Math.Max(0, height - dgvY - Margin));
         }
 
         // ── Cell Painting: Action Column ────────────────────────────────────
@@ -152,20 +152,20 @@ namespace WinformsGUI.Views.Booth
                                   DataGridViewPaintParts.SelectionBackground |
                                   DataGridViewPaintParts.Border);
 
-            int btnH = e.CellBounds.Height - AksiPadY * 2;
+            int buttonHeight = e.CellBounds.Height - AksiPadY * 2;
             int x0   = e.CellBounds.X + AksiPadX;
             int y0   = e.CellBounds.Y + AksiPadY;
 
             Theme.DrawGridActionButton(e.Graphics,
-                new RectangleF(x0, y0, AksiBtnW, btnH),
+                new RectangleF(x0, y0, AksiBtnW, buttonHeight),
                 "✎  Edit", Theme.AccentPrimary, Theme.TextPrimary);
 
             Theme.DrawGridActionButton(e.Graphics,
-                new RectangleF(x0 + AksiBtnW + AksiGap, y0, AksiBtnW, btnH),
+                new RectangleF(x0 + AksiBtnW + AksiGap, y0, AksiBtnW, buttonHeight),
                 "✕  Hapus", Theme.AccentDanger, Theme.TextPrimary);
 
             Theme.DrawGridActionButton(e.Graphics,
-                new RectangleF(x0 + (AksiBtnW + AksiGap) * 2, y0, AksiBtnW, btnH),
+                new RectangleF(x0 + (AksiBtnW + AksiGap) * 2, y0, AksiBtnW, buttonHeight),
                 "◎  Detail", Theme.BgCard, Theme.TextSecondary);
 
             e.Handled = true;
@@ -176,13 +176,13 @@ namespace WinformsGUI.Views.Booth
         {
             if (e.RowIndex < 0 || dgvBooths.Columns[e.ColumnIndex].Name != "colAksi") return;
 
-            int x = e.X;
-            if      (x >= AksiPadX && x < AksiPadX + AksiBtnW)
+            int positionX = e.X;
+            if      (positionX >= AksiPadX && positionX < AksiPadX + AksiBtnW)
                 BtnEdit_Action(e.RowIndex);
-            else if (x >= AksiPadX + AksiBtnW + AksiGap &&
-                     x < AksiPadX + (AksiBtnW + AksiGap) * 2)
+            else if (positionX >= AksiPadX + AksiBtnW + AksiGap &&
+                     positionX < AksiPadX + (AksiBtnW + AksiGap) * 2)
                 BtnDelete_Action(e.RowIndex);
-            else if (x >= AksiPadX + (AksiBtnW + AksiGap) * 2)
+            else if (positionX >= AksiPadX + (AksiBtnW + AksiGap) * 2)
                 BtnDetail_Action(e.RowIndex);
         }
 

@@ -48,45 +48,45 @@ namespace WinformsGUI.Views.Auth
             this.MaximizeBox     = false;
             this.StartPosition   = FormStartPosition.CenterScreen;
 
-            int m = Theme.SpaceLG, w = this.ClientSize.Width - m * 2, cardH = 500;
-            int cy = (this.ClientSize.Height - cardH) / 2;
+            int margin = Theme.SpaceLG, cardWidth = this.ClientSize.Width - margin * 2, cardHeight = 500;
+            int cardPositionY = (this.ClientSize.Height - cardHeight) / 2;
 
-            this.pnlCard.Location = new Point(m, cy);
-            this.pnlCard.Size     = new Size(w, cardH);
+            this.pnlCard.Location = new Point(margin, cardPositionY);
+            this.pnlCard.Size     = new Size(cardWidth, cardHeight);
             this.pnlCard.BackColor= Theme.BgCard;
             this.Controls.Add(this.pnlCard);
 
-            int cx = Theme.SpaceLG, cw = w - Theme.SpaceLG * 2, y = Theme.SpaceXL;
+            int contentX = Theme.SpaceLG, contentWidth = cardWidth - Theme.SpaceLG * 2, positionY = Theme.SpaceXL;
 
             this.lblTitle.Text      = "Buat Akun Baru";
             this.lblTitle.Font      = Theme.FontTitle;
             this.lblTitle.ForeColor = Theme.TextPrimary;
             this.lblTitle.BackColor = Color.Transparent;
             this.lblTitle.AutoSize  = false;
-            this.lblTitle.Size      = new Size(cw, 46);
-            this.lblTitle.Location  = new Point(cx, y);
+            this.lblTitle.Size      = new Size(contentWidth, 46);
+            this.lblTitle.Location  = new Point(contentX, positionY);
             this.lblTitle.TextAlign = ContentAlignment.MiddleCenter;
-            y += 46 + 4;
+            positionY += 46 + 4;
 
             this.lblSubtitle.Text      = "Daftar untuk mengakses sistem";
             this.lblSubtitle.Font      = Theme.FontBody;
             this.lblSubtitle.ForeColor = Theme.TextMuted;
             this.lblSubtitle.BackColor = Color.Transparent;
             this.lblSubtitle.AutoSize  = false;
-            this.lblSubtitle.Size      = new Size(cw, 24);
-            this.lblSubtitle.Location  = new Point(cx, y);
+            this.lblSubtitle.Size      = new Size(contentWidth, 24);
+            this.lblSubtitle.Location  = new Point(contentX, positionY);
             this.lblSubtitle.TextAlign = ContentAlignment.MiddleCenter;
-            y += 24 + Theme.SpaceXL;
+            positionY += 24 + Theme.SpaceXL;
 
-            MakeFieldLabel(lblEmail, "EMAIL", cx, y); y += Theme.SpaceSM + 2;
-            MakeTextBox(txtEmail, cx, y, cw, 38); y += 38 + Theme.SpaceMD;
+            MakeFieldLabel(lblEmail, "EMAIL", contentX, positionY); positionY += Theme.SpaceSM + 2;
+            MakeTextBox(txtEmail, contentX, positionY, contentWidth, 38); positionY += 38 + Theme.SpaceMD;
 
-            MakeFieldLabel(lblPassword, "PASSWORD", cx, y); y += Theme.SpaceSM + 2;
-            MakeTextBox(txtPassword, cx, y, cw, 38); txtPassword.PasswordChar = '•'; y += 38 + Theme.SpaceMD;
+            MakeFieldLabel(lblPassword, "PASSWORD", contentX, positionY); positionY += Theme.SpaceSM + 2;
+            MakeTextBox(txtPassword, contentX, positionY, contentWidth, 38); txtPassword.PasswordChar = '•'; positionY += 38 + Theme.SpaceMD;
 
-            MakeFieldLabel(lblRole, "ROLE", cx, y); y += Theme.SpaceSM + 2;
-            this.cmbRole.Location     = new Point(cx, y);
-            this.cmbRole.Size         = new Size(cw, 38);
+            MakeFieldLabel(lblRole, "ROLE", contentX, positionY); positionY += Theme.SpaceSM + 2;
+            this.cmbRole.Location     = new Point(contentX, positionY);
+            this.cmbRole.Size         = new Size(contentWidth, 38);
             this.cmbRole.DropDownStyle= ComboBoxStyle.DropDownList;
             this.cmbRole.BackColor    = Theme.BgInput;
             this.cmbRole.ForeColor    = Theme.TextPrimary;
@@ -94,21 +94,21 @@ namespace WinformsGUI.Views.Auth
             this.cmbRole.FlatStyle    = FlatStyle.Flat;
             this.cmbRole.Items.AddRange(new object[] { "Admin", "User", "Tenant" });
             this.cmbRole.SelectedIndex= 1;
-            y += 38 + Theme.SpaceXL;
+            positionY += 38 + Theme.SpaceXL;
 
             this.btnRegister.Text         = "Daftar";
-            this.btnRegister.Size         = new Size(cw, 48);
-            this.btnRegister.Location     = new Point(cx, y);
+            this.btnRegister.Size         = new Size(contentWidth, 48);
+            this.btnRegister.Location     = new Point(contentX, positionY);
             this.btnRegister.Font         = Theme.FontSubhead;
             this.btnRegister.CornerRadius = Theme.RadiusButton;
             Theme.ApplyToButton(this.btnRegister);
             this.btnRegister.Click       += BtnRegister_Click;
-            y += 48 + Theme.SpaceMD;
+            positionY += 48 + Theme.SpaceMD;
 
             this.lnkLogin.Text      = "Sudah punya akun? Masuk di sini";
             this.lnkLogin.Font      = Theme.FontSmall;
-            this.lnkLogin.Location  = new Point(cx, y);
-            this.lnkLogin.Size      = new Size(cw, 24);
+            this.lnkLogin.Location  = new Point(contentX, positionY);
+            this.lnkLogin.Size      = new Size(contentWidth, 24);
             this.lnkLogin.TextAlign = ContentAlignment.MiddleCenter;
             Theme.ApplyToLinkLabel(this.lnkLogin);
             this.lnkLogin.LinkClicked += LnkLogin_LinkClicked;
@@ -119,20 +119,20 @@ namespace WinformsGUI.Views.Auth
             });
         }
 
-        private void MakeFieldLabel(Label lbl, string text, int x, int y)
+        private void MakeFieldLabel(Label lbl, string text, int positionX, int positionY)
         {
             lbl.Text      = text;
             lbl.Font      = Theme.FontLabel;
             lbl.ForeColor = Theme.TextMuted;
             lbl.BackColor = Color.Transparent;
             lbl.AutoSize  = true;
-            lbl.Location  = new Point(x, y);
+            lbl.Location  = new Point(positionX, positionY);
         }
 
-        private void MakeTextBox(TextBox txt, int x, int y, int w, int h)
+        private void MakeTextBox(TextBox txt, int positionX, int positionY, int width, int height)
         {
-            txt.Location    = new Point(x, y);
-            txt.Size        = new Size(w, h);
+            txt.Location    = new Point(positionX, positionY);
+            txt.Size        = new Size(width, height);
             txt.BorderStyle = BorderStyle.FixedSingle;
             txt.BackColor   = Theme.BgInput;
             txt.ForeColor   = Theme.TextPrimary;

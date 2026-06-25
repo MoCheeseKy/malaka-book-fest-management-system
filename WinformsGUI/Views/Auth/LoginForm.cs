@@ -50,18 +50,18 @@ namespace WinformsGUI.Views.Auth
             this.MaximizeBox     = false;
             this.StartPosition   = FormStartPosition.CenterScreen;
 
-            int m = Theme.SpaceLG;
-            int w = this.ClientSize.Width - m * 2;
-            int cardH = 430;
-            int cy = (this.ClientSize.Height - cardH) / 2;
+            int margin = Theme.SpaceLG;
+            int cardWidth = this.ClientSize.Width - margin * 2;
+            int cardHeight = 430;
+            int cardPositionY = (this.ClientSize.Height - cardHeight) / 2;
 
             // Card Panel
-            this.pnlCard.Location = new Point(m, cy);
-            this.pnlCard.Size     = new Size(w, cardH);
+            this.pnlCard.Location = new Point(margin, cardPositionY);
+            this.pnlCard.Size     = new Size(cardWidth, cardHeight);
             this.pnlCard.BackColor= Theme.BgCard;
             this.Controls.Add(this.pnlCard);
 
-            int cx = Theme.SpaceLG, cw = w - Theme.SpaceLG * 2, y = Theme.SpaceXL;
+            int contentX = Theme.SpaceLG, contentWidth = cardWidth - Theme.SpaceLG * 2, positionY = Theme.SpaceXL;
 
             // App Name
             this.lblAppName.Text      = "📚 Malaka Book Fest";
@@ -69,10 +69,10 @@ namespace WinformsGUI.Views.Auth
             this.lblAppName.ForeColor = Theme.TextPrimary;
             this.lblAppName.BackColor = Color.Transparent;
             this.lblAppName.AutoSize  = false;
-            this.lblAppName.Size      = new Size(cw, 46);
-            this.lblAppName.Location  = new Point(cx, y);
+            this.lblAppName.Size      = new Size(contentWidth, 46);
+            this.lblAppName.Location  = new Point(contentX, positionY);
             this.lblAppName.TextAlign = ContentAlignment.MiddleCenter;
-            y += 46 + 4;
+            positionY += 46 + 4;
 
             // Tagline
             this.lblTagline.Text      = "Silakan masuk untuk melanjutkan";
@@ -80,10 +80,10 @@ namespace WinformsGUI.Views.Auth
             this.lblTagline.ForeColor = Theme.TextMuted;
             this.lblTagline.BackColor = Color.Transparent;
             this.lblTagline.AutoSize  = false;
-            this.lblTagline.Size      = new Size(cw, 24);
-            this.lblTagline.Location  = new Point(cx, y);
+            this.lblTagline.Size      = new Size(contentWidth, 24);
+            this.lblTagline.Location  = new Point(contentX, positionY);
             this.lblTagline.TextAlign = ContentAlignment.MiddleCenter;
-            y += 24 + Theme.SpaceXL;
+            positionY += 24 + Theme.SpaceXL;
 
             // Email
             this.lblEmail.Text      = "EMAIL";
@@ -91,15 +91,15 @@ namespace WinformsGUI.Views.Auth
             this.lblEmail.ForeColor = Theme.TextMuted;
             this.lblEmail.BackColor = Color.Transparent;
             this.lblEmail.AutoSize  = true;
-            this.lblEmail.Location  = new Point(cx, y); y += Theme.SpaceSM + 2;
+            this.lblEmail.Location  = new Point(contentX, positionY); positionY += Theme.SpaceSM + 2;
 
-            this.txtEmail.Location    = new Point(cx, y);
-            this.txtEmail.Size        = new Size(cw, 38);
+            this.txtEmail.Location    = new Point(contentX, positionY);
+            this.txtEmail.Size        = new Size(contentWidth, 38);
             this.txtEmail.BorderStyle = BorderStyle.FixedSingle;
             this.txtEmail.BackColor   = Theme.BgInput;
             this.txtEmail.ForeColor   = Theme.TextPrimary;
             this.txtEmail.Font        = Theme.FontBody;
-            y += 38 + Theme.SpaceMD;
+            positionY += 38 + Theme.SpaceMD;
 
             // Password
             this.lblPassword.Text      = "PASSWORD";
@@ -107,32 +107,32 @@ namespace WinformsGUI.Views.Auth
             this.lblPassword.ForeColor = Theme.TextMuted;
             this.lblPassword.BackColor = Color.Transparent;
             this.lblPassword.AutoSize  = true;
-            this.lblPassword.Location  = new Point(cx, y); y += Theme.SpaceSM + 2;
+            this.lblPassword.Location  = new Point(contentX, positionY); positionY += Theme.SpaceSM + 2;
 
-            this.txtPassword.Location    = new Point(cx, y);
-            this.txtPassword.Size        = new Size(cw, 38);
+            this.txtPassword.Location    = new Point(contentX, positionY);
+            this.txtPassword.Size        = new Size(contentWidth, 38);
             this.txtPassword.BorderStyle = BorderStyle.FixedSingle;
             this.txtPassword.BackColor   = Theme.BgInput;
             this.txtPassword.ForeColor   = Theme.TextPrimary;
             this.txtPassword.Font        = Theme.FontBody;
             this.txtPassword.PasswordChar= '•';
-            y += 38 + Theme.SpaceXL;
+            positionY += 38 + Theme.SpaceXL;
 
             // Login Button
             this.btnLogin.Text         = "Masuk";
-            this.btnLogin.Size         = new Size(cw, 48);
-            this.btnLogin.Location     = new Point(cx, y);
+            this.btnLogin.Size         = new Size(contentWidth, 48);
+            this.btnLogin.Location     = new Point(contentX, positionY);
             this.btnLogin.Font         = Theme.FontSubhead;
             this.btnLogin.CornerRadius = Theme.RadiusButton;
             Theme.ApplyToButton(this.btnLogin);
             this.btnLogin.Click       += BtnLogin_Click;
-            y += 48 + Theme.SpaceMD;
+            positionY += 48 + Theme.SpaceMD;
 
             // Register Link
             this.lnkRegister.Text      = "Belum punya akun? Daftar sekarang";
             this.lnkRegister.Font      = Theme.FontSmall;
-            this.lnkRegister.Location  = new Point(cx, y);
-            this.lnkRegister.Size      = new Size(cw, 24);
+            this.lnkRegister.Location  = new Point(contentX, positionY);
+            this.lnkRegister.Size      = new Size(contentWidth, 24);
             this.lnkRegister.TextAlign = ContentAlignment.MiddleCenter;
             Theme.ApplyToLinkLabel(this.lnkRegister);
             this.lnkRegister.LinkClicked += LnkRegister_LinkClicked;

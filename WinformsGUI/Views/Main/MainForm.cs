@@ -148,10 +148,10 @@ namespace WinformsGUI.Views.Main
             this.Load += (s, e) => ShowFormInContent(new DashboardHomeForm());
         }
 
-        private void SetupNavButton(Button btn, string text, int y, EventHandler click)
+        private void SetupNavButton(Button btn, string text, int positionY, EventHandler click)
         {
             btn.Text      = text;
-            btn.Location  = new Point(Theme.SpaceLG, y);
+            btn.Location  = new Point(Theme.SpaceLG, positionY);
             btn.Size      = new Size(228, 46);
             btn.FlatStyle = FlatStyle.Flat;
             btn.BackColor = Color.Transparent;

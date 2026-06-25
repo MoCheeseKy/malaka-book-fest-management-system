@@ -25,10 +25,10 @@ namespace WinformsGUI.Views.Talkshow
         private WinformsGUI.Controls.SearchBar txtSearch;
         private System.Collections.Generic.List<TalkshowResponse> _allTalkshows = new();
 
-        private const int M       = Theme.SpaceLG;
-        private const int TitleH  = 36;
-        private const int DescH   = 22;
-        private const int BtnH    = 44;
+        private const int Margin       = Theme.SpaceLG;
+        private const int TitleHeight  = 36;
+        private const int DescriptionHeight   = 22;
+        private const int ButtonHeight    = 44;
 
         // 2 action buttons: Edit + Detail
         private const int AksiPadX = 5;
@@ -80,7 +80,7 @@ namespace WinformsGUI.Views.Talkshow
             this.btnRefresh.Click       += BtnRefresh_Click;
 
             this.btnAdd.Text         = "+  Tambah";
-            this.btnAdd.Size         = new Size(148, BtnH);
+            this.btnAdd.Size         = new Size(148, ButtonHeight);
             this.btnAdd.Font         = Theme.FontSubhead;
             this.btnAdd.CornerRadius = Theme.RadiusButton;
             Theme.ApplyToButton(this.btnAdd);
@@ -120,24 +120,24 @@ namespace WinformsGUI.Views.Talkshow
 
         private void RepositionControls()
         {
-            int w = this.ClientSize.Width;
-            int h = this.ClientSize.Height;
+            int width = this.ClientSize.Width;
+            int height = this.ClientSize.Height;
 
-            int headerBlockH = TitleH + 8 + DescH;
+            int headerBlockH = TitleHeight + 8 + DescriptionHeight;
             int rowY         = 102;
-            int btnY         = rowY + (headerBlockH - BtnH) / 2;
+            int buttonPositionY = rowY + (headerBlockH - ButtonHeight) / 2;
 
-            this.lblTitle.Location       = new Point(M, rowY);
-            this.lblDescription.Location = new Point(M, rowY + TitleH + 8);
+            this.lblTitle.Location       = new Point(Margin, rowY);
+            this.lblDescription.Location = new Point(Margin, rowY + TitleHeight + 8);
 
-            this.btnAdd.Location     = new Point(w - M - btnAdd.Width, btnY);
+            this.btnAdd.Location     = new Point(width - Margin - btnAdd.Width, buttonPositionY);
             this.btnRefresh.Location = new Point(btnAdd.Left - Theme.SpaceSM - btnRefresh.Width,
-                                                 btnY + (BtnH - btnRefresh.Height) / 2);
-            this.txtSearch.Location  = new Point(btnRefresh.Left - Theme.SpaceLG - txtSearch.Width, btnY + (BtnH - txtSearch.Height) / 2);
+                                                 buttonPositionY + (ButtonHeight - btnRefresh.Height) / 2);
+            this.txtSearch.Location  = new Point(btnRefresh.Left - Theme.SpaceLG - txtSearch.Width, buttonPositionY + (ButtonHeight - txtSearch.Height) / 2);
 
             int dgvY = rowY + headerBlockH + 48;
-            this.dgvTalkshows.Location = new Point(M, dgvY);
-            this.dgvTalkshows.Size     = new Size(w - M * 2, Math.Max(0, h - dgvY - M));
+            this.dgvTalkshows.Location = new Point(Margin, dgvY);
+            this.dgvTalkshows.Size     = new Size(width - Margin * 2, Math.Max(0, height - dgvY - Margin));
         }
 
         // ── Cell Painting ───────────────────────────────────────────────────
@@ -149,16 +149,16 @@ namespace WinformsGUI.Views.Talkshow
                                   DataGridViewPaintParts.SelectionBackground |
                                   DataGridViewPaintParts.Border);
 
-            int btnH = e.CellBounds.Height - AksiPadY * 2;
+            int buttonHeight = e.CellBounds.Height - AksiPadY * 2;
             int x0   = e.CellBounds.X + AksiPadX;
             int y0   = e.CellBounds.Y + AksiPadY;
 
             Theme.DrawGridActionButton(e.Graphics,
-                new RectangleF(x0, y0, AksiBtnW, btnH),
+                new RectangleF(x0, y0, AksiBtnW, buttonHeight),
                 "✎  Edit", Theme.AccentPrimary, Theme.TextPrimary);
 
             Theme.DrawGridActionButton(e.Graphics,
-                new RectangleF(x0 + AksiBtnW + AksiGap, y0, AksiBtnW, btnH),
+                new RectangleF(x0 + AksiBtnW + AksiGap, y0, AksiBtnW, buttonHeight),
                 "◎  Detail", Theme.BgCard, Theme.TextSecondary);
 
             e.Handled = true;
@@ -168,9 +168,9 @@ namespace WinformsGUI.Views.Talkshow
         {
             if (e.RowIndex < 0 || dgvTalkshows.Columns[e.ColumnIndex].Name != "colAksi") return;
 
-            int x = e.X;
-            if      (x >= AksiPadX && x < AksiPadX + AksiBtnW)           BtnEdit_Action(e.RowIndex);
-            else if (x >= AksiPadX + AksiBtnW + AksiGap)                  BtnDetail_Action(e.RowIndex);
+            int positionX = e.X;
+            if      (positionX >= AksiPadX && positionX < AksiPadX + AksiBtnW)           BtnEdit_Action(e.RowIndex);
+            else if (positionX >= AksiPadX + AksiBtnW + AksiGap)                  BtnDetail_Action(e.RowIndex);
         }
 
         // ── Status Formatting ───────────────────────────────────────────────

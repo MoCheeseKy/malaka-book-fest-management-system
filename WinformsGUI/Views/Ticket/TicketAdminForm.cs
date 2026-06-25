@@ -30,9 +30,9 @@ namespace WinformsGUI.Views.Ticket
         private TicketService _ticketService;
         private System.Collections.Generic.List<TicketResponse> _allTickets = new();
 
-        private const int M      = Theme.SpaceLG;
-        private const int TitleH = 36;
-        private const int DescH  = 22;
+        private const int Margin      = Theme.SpaceLG;
+        private const int TitleHeight = 36;
+        private const int DescriptionHeight  = 22;
 
         public TicketAdminForm()
         {
@@ -93,23 +93,23 @@ namespace WinformsGUI.Views.Ticket
             this.lblScanTitle.ForeColor = Theme.AccentSecond;
             this.lblScanTitle.BackColor = Color.Transparent;
             this.lblScanTitle.AutoSize  = true;
-            this.lblScanTitle.Location  = new Point(M, M);
+            this.lblScanTitle.Location  = new Point(Margin, Margin);
 
             this.lblScanHint.Text      = "Masukkan Ticket ID (GUID) untuk\nverifikasi kehadiran pengunjung.";
             this.lblScanHint.Font      = Theme.FontSmall;
             this.lblScanHint.ForeColor = Theme.TextMuted;
             this.lblScanHint.BackColor = Color.Transparent;
             this.lblScanHint.AutoSize  = true;
-            this.lblScanHint.Location  = new Point(M, M + 38);
+            this.lblScanHint.Location  = new Point(Margin, Margin + 38);
 
             this.lblTicketIdLabel.Text      = "TICKET ID";
             this.lblTicketIdLabel.Font      = Theme.FontLabel;
             this.lblTicketIdLabel.ForeColor = Theme.TextMuted;
             this.lblTicketIdLabel.BackColor = Color.Transparent;
             this.lblTicketIdLabel.AutoSize  = true;
-            this.lblTicketIdLabel.Location  = new Point(M, M + 38 + 54);
+            this.lblTicketIdLabel.Location  = new Point(Margin, Margin + 38 + 54);
 
-            this.txtTicketId.Location       = new Point(M, M + 38 + 54 + Theme.SpaceSM + 2);
+            this.txtTicketId.Location       = new Point(Margin, Margin + 38 + 54 + Theme.SpaceSM + 2);
             this.txtTicketId.Size           = new Size(230, 34);
             this.txtTicketId.BorderStyle    = BorderStyle.FixedSingle;
             this.txtTicketId.BackColor      = Theme.BgInput;
@@ -117,10 +117,10 @@ namespace WinformsGUI.Views.Ticket
             this.txtTicketId.Font           = Theme.FontSmall;
             this.txtTicketId.PlaceholderText= "xxxx-xxxx-xxxx-xxxx";
 
-            int scanBtnY = M + 38 + 54 + Theme.SpaceSM + 2 + 34 + Theme.SpaceMD;
+            int scanButtonPositionY = Margin + 38 + 54 + Theme.SpaceSM + 2 + 34 + Theme.SpaceMD;
             this.btnScan.Text         = "Scan & Verifikasi";
             this.btnScan.Size         = new Size(230, 48);
-            this.btnScan.Location     = new Point(M, scanBtnY);
+            this.btnScan.Location     = new Point(Margin, scanButtonPositionY);
             this.btnScan.Font         = Theme.FontSubhead;
             this.btnScan.CornerRadius = Theme.RadiusButton;
             Theme.ApplyToAccentButton(this.btnScan);
@@ -134,7 +134,7 @@ namespace WinformsGUI.Views.Ticket
             this.lblScanResult.BackColor = Color.Transparent;
             this.lblScanResult.AutoSize  = false;
             this.lblScanResult.Size      = new Size(230, 40);
-            this.lblScanResult.Location  = new Point(M, scanBtnY + 56);
+            this.lblScanResult.Location  = new Point(Margin, scanButtonPositionY + 56);
             this.lblScanResult.TextAlign = ContentAlignment.MiddleCenter;
 
             this.pnlScanCard.Controls.AddRange(new Control[] {
@@ -154,32 +154,32 @@ namespace WinformsGUI.Views.Ticket
 
         private void RepositionControls()
         {
-            int w = this.ClientSize.Width;
-            int h = this.ClientSize.Height;
+            int width = this.ClientSize.Width;
+            int height = this.ClientSize.Height;
 
             // Header row
-            int headerBlockH = TitleH + 8 + DescH;
+            int headerBlockH = TitleHeight + 8 + DescriptionHeight;
             int rowY = 102;
 
-            this.lblTitle.Location       = new Point(M, rowY);
-            this.lblDescription.Location = new Point(M, rowY + TitleH + 8);
+            this.lblTitle.Location       = new Point(Margin, rowY);
+            this.lblDescription.Location = new Point(Margin, rowY + TitleHeight + 8);
 
-            this.btnRefresh.Location = new Point(w - M - btnRefresh.Width,
+            this.btnRefresh.Location = new Point(width - Margin - btnRefresh.Width,
                                                  rowY + (headerBlockH - btnRefresh.Height) / 2);
             this.txtSearch.Location  = new Point(btnRefresh.Left - Theme.SpaceLG - txtSearch.Width,
                                                  rowY + (headerBlockH - txtSearch.Height) / 2);
 
             // Scan card (right side)
-            int cardW  = 278;
+            int cardWidth  = 278;
             int dgvY   = rowY + headerBlockH + 48;
-            int dgvH   = Math.Max(0, h - dgvY - M);
+            int dgvH   = Math.Max(0, height - dgvY - Margin);
 
-            this.pnlScanCard.Location = new Point(w - M - cardW, dgvY);
-            this.pnlScanCard.Size     = new Size(cardW, dgvH);
+            this.pnlScanCard.Location = new Point(width - Margin - cardWidth, dgvY);
+            this.pnlScanCard.Size     = new Size(cardWidth, dgvH);
 
             // Grid (left side)
-            this.dgvTickets.Location = new Point(M, dgvY);
-            this.dgvTickets.Size     = new Size(w - cardW - M * 3, dgvH);
+            this.dgvTickets.Location = new Point(Margin, dgvY);
+            this.dgvTickets.Size     = new Size(width - cardWidth - Margin * 3, dgvH);
         }
 
         private async void LoadData()

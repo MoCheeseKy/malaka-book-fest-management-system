@@ -56,7 +56,7 @@ namespace WinformsGUI.Views.Talkshow
             this.MaximizeBox     = false;
             this.StartPosition   = FormStartPosition.CenterParent;
 
-            int m = Theme.SpaceLG, w = 480, y = m;
+            int margin = Theme.SpaceLG, cardWidth = 480, positionY = margin;
 
             // Title
             this.lblTitle.Text      = "(Title)";
@@ -64,19 +64,19 @@ namespace WinformsGUI.Views.Talkshow
             this.lblTitle.ForeColor = Theme.TextPrimary;
             this.lblTitle.BackColor = Color.Transparent;
             this.lblTitle.AutoSize  = false;
-            this.lblTitle.Size      = new Size(w, 38);
-            this.lblTitle.Location  = new Point(m, y); y += 38 + 4;
+            this.lblTitle.Size      = new Size(cardWidth, 38);
+            this.lblTitle.Location  = new Point(margin, positionY); positionY += 38 + 4;
 
             this.lblSpeaker.Text      = "🎤 (Speaker)";
             this.lblSpeaker.Font      = Theme.FontSmall;
             this.lblSpeaker.ForeColor = Theme.AccentPrimary;
             this.lblSpeaker.BackColor = Color.Transparent;
             this.lblSpeaker.AutoSize  = true;
-            this.lblSpeaker.Location  = new Point(m, y); y += 24 + Theme.SpaceSM;
+            this.lblSpeaker.Location  = new Point(margin, positionY); positionY += 24 + Theme.SpaceSM;
 
             this.pnlDivider.BackColor = Theme.BorderSoft;
-            this.pnlDivider.Size      = new Size(w, 1);
-            this.pnlDivider.Location  = new Point(m, y); y += 1 + Theme.SpaceMD;
+            this.pnlDivider.Size      = new Size(cardWidth, 1);
+            this.pnlDivider.Location  = new Point(margin, positionY); positionY += 1 + Theme.SpaceMD;
 
             // Section
             this.lblSection.Text      = "INFORMASI ACARA";
@@ -84,17 +84,17 @@ namespace WinformsGUI.Views.Talkshow
             this.lblSection.ForeColor = Theme.TextMuted;
             this.lblSection.BackColor = Color.Transparent;
             this.lblSection.AutoSize  = true;
-            this.lblSection.Location  = new Point(m, y); y += 22 + Theme.SpaceSM;
+            this.lblSection.Location  = new Point(margin, positionY); positionY += 22 + Theme.SpaceSM;
 
             // Info Card (4 rows × 58px)
             this.pnlInfoCard.BackColor = Theme.BgCard;
-            this.pnlInfoCard.Location  = new Point(m, y);
-            this.pnlInfoCard.Size      = new Size(w, 232);
-            AddMetaRow(pnlInfoCard, lblVenueKey,  lblVenueVal,  "Venue",      0,   w);
-            AddMetaRow(pnlInfoCard, lblTimeKey,   lblTimeVal,   "Waktu",      58,  w);
-            AddMetaRow(pnlInfoCard, lblStatusKey, lblStatusVal, "Status",     116, w);
-            AddMetaRow(pnlInfoCard, lblCapKey,    lblCapVal,    "Kapasitas",  174, w);
-            y += 232 + Theme.SpaceMD;
+            this.pnlInfoCard.Location  = new Point(margin, positionY);
+            this.pnlInfoCard.Size      = new Size(cardWidth, 232);
+            AddMetaRow(pnlInfoCard, lblVenueKey,  lblVenueVal,  "Venue",      0,   cardWidth);
+            AddMetaRow(pnlInfoCard, lblTimeKey,   lblTimeVal,   "Waktu",      58,  cardWidth);
+            AddMetaRow(pnlInfoCard, lblStatusKey, lblStatusVal, "Status",     116, cardWidth);
+            AddMetaRow(pnlInfoCard, lblCapKey,    lblCapVal,    "Kapasitas",  174, cardWidth);
+            positionY += 232 + Theme.SpaceMD;
 
             // Bio
             this.lblBioSection.Text      = "BIOGRAFI PEMBICARA";
@@ -102,22 +102,22 @@ namespace WinformsGUI.Views.Talkshow
             this.lblBioSection.ForeColor = Theme.TextMuted;
             this.lblBioSection.BackColor = Color.Transparent;
             this.lblBioSection.AutoSize  = true;
-            this.lblBioSection.Location  = new Point(m, y); y += 22 + Theme.SpaceSM;
+            this.lblBioSection.Location  = new Point(margin, positionY); positionY += 22 + Theme.SpaceSM;
 
             this.lblBio.Text      = "(bio)";
             this.lblBio.Font      = Theme.FontBody;
             this.lblBio.ForeColor = Theme.TextSecondary;
             this.lblBio.BackColor = Theme.BgCard;
             this.lblBio.AutoSize  = false;
-            this.lblBio.Size      = new Size(w, 68);
-            this.lblBio.Location  = new Point(m, y);
+            this.lblBio.Size      = new Size(cardWidth, 68);
+            this.lblBio.Location  = new Point(margin, positionY);
             this.lblBio.Padding   = new Padding(Theme.SpaceMD, Theme.SpaceSM, Theme.SpaceMD, Theme.SpaceSM);
-            y += 68 + Theme.SpaceLG;
+            positionY += 68 + Theme.SpaceLG;
 
             // Close
             this.btnClose.Text         = "Tutup";
-            this.btnClose.Size         = new Size(w, 48);
-            this.btnClose.Location     = new Point(m, y);
+            this.btnClose.Size         = new Size(cardWidth, 48);
+            this.btnClose.Location     = new Point(margin, positionY);
             this.btnClose.Font         = Theme.FontSubhead;
             this.btnClose.CornerRadius = Theme.RadiusButton;
             Theme.ApplyToSecondaryButton(this.btnClose);
@@ -131,19 +131,19 @@ namespace WinformsGUI.Views.Talkshow
             });
         }
 
-        private void AddMetaRow(Panel parent, Label k, Label v, string key, int y, int cardW)
+        private void AddMetaRow(Panel parent, Label k, Label v, string key, int positionY, int cardWidth)
         {
             k.Text      = key; k.Font = Theme.FontLabel; k.ForeColor = Theme.TextMuted;
             k.BackColor = Color.Transparent; k.AutoSize = false; k.Size = new Size(110, 26);
-            k.Location  = new Point(Theme.SpaceMD, y + Theme.SpaceMD); k.TextAlign = ContentAlignment.MiddleLeft;
+            k.Location  = new Point(Theme.SpaceMD, positionY + Theme.SpaceMD); k.TextAlign = ContentAlignment.MiddleLeft;
 
             v.Text      = "—"; v.Font = Theme.FontBody; v.ForeColor = Theme.TextPrimary;
-            v.BackColor = Color.Transparent; v.AutoSize = false; v.Size = new Size(cardW - 110 - Theme.SpaceMD * 2, 26);
-            v.Location  = new Point(Theme.SpaceMD + 120, y + Theme.SpaceMD); v.TextAlign = ContentAlignment.MiddleLeft;
+            v.BackColor = Color.Transparent; v.AutoSize = false; v.Size = new Size(cardWidth - 110 - Theme.SpaceMD * 2, 26);
+            v.Location  = new Point(Theme.SpaceMD + 120, positionY + Theme.SpaceMD); v.TextAlign = ContentAlignment.MiddleLeft;
 
-            if (y > 0)
+            if (positionY > 0)
             {
-                var div = new Panel { Location = new Point(Theme.SpaceMD, y + Theme.SpaceSM), Size = new Size(cardW - Theme.SpaceMD * 2, 1), BackColor = Theme.BorderSoft };
+                var div = new Panel { Location = new Point(Theme.SpaceMD, positionY + Theme.SpaceSM), Size = new Size(cardWidth - Theme.SpaceMD * 2, 1), BackColor = Theme.BorderSoft };
                 parent.Controls.Add(div);
             }
             parent.Controls.Add(k); parent.Controls.Add(v);

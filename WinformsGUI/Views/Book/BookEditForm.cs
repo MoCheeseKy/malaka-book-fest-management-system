@@ -85,7 +85,7 @@ namespace WinformsGUI.Views.Book
             this.MaximizeBox     = false;
             this.StartPosition   = FormStartPosition.CenterParent;
 
-            int m = Theme.SpaceLG, w = 380, y = m;
+            int margin = Theme.SpaceLG, cardWidth = 380, positionY = margin;
 
             // Title
             this.lblTitle.Text      = "Tambah Buku Baru";
@@ -93,63 +93,63 @@ namespace WinformsGUI.Views.Book
             this.lblTitle.ForeColor = Theme.TextPrimary;
             this.lblTitle.BackColor = Color.Transparent;
             this.lblTitle.AutoSize  = true;
-            this.lblTitle.Location  = new Point(m, y); y += 38;
+            this.lblTitle.Location  = new Point(margin, positionY); positionY += 38;
 
             this.lblSubtitle.Text      = "Isi detail informasi buku";
             this.lblSubtitle.Font      = Theme.FontSmall;
             this.lblSubtitle.ForeColor = Theme.TextMuted;
             this.lblSubtitle.BackColor = Color.Transparent;
             this.lblSubtitle.AutoSize  = true;
-            this.lblSubtitle.Location  = new Point(m, y); y += 28;
+            this.lblSubtitle.Location  = new Point(margin, positionY); positionY += 28;
 
             this.pnlDivider.BackColor = Theme.BorderSoft;
-            this.pnlDivider.Size      = new Size(w, 1);
-            this.pnlDivider.Location  = new Point(m, y); y += 1 + Theme.SpaceMD;
+            this.pnlDivider.Size      = new Size(cardWidth, 1);
+            this.pnlDivider.Location  = new Point(margin, positionY); positionY += 1 + Theme.SpaceMD;
 
             // Fields
-            MakeFieldLabel(lblBookTitle, "JUDUL BUKU", m, y); y += Theme.SpaceSM + 2;
-            MakeTextBox(txtTitle, m, y, w, 38); y += 38 + Theme.SpaceMD;
+            MakeFieldLabel(lblBookTitle, "JUDUL BUKU", margin, positionY); positionY += Theme.SpaceSM + 2;
+            MakeTextBox(txtTitle, margin, positionY, cardWidth, 38); positionY += 38 + Theme.SpaceMD;
 
-            MakeFieldLabel(lblAuthor, "PENULIS", m, y); y += Theme.SpaceSM + 2;
-            MakeTextBox(txtAuthor, m, y, w, 38); y += 38 + Theme.SpaceMD;
+            MakeFieldLabel(lblAuthor, "PENULIS", margin, positionY); positionY += Theme.SpaceSM + 2;
+            MakeTextBox(txtAuthor, margin, positionY, cardWidth, 38); positionY += 38 + Theme.SpaceMD;
 
-            MakeFieldLabel(lblIsbn, "ISBN", m, y); y += Theme.SpaceSM + 2;
-            MakeTextBox(txtIsbn, m, y, w, 38); y += 38 + Theme.SpaceMD;
+            MakeFieldLabel(lblIsbn, "ISBN", margin, positionY); positionY += Theme.SpaceSM + 2;
+            MakeTextBox(txtIsbn, margin, positionY, cardWidth, 38); positionY += 38 + Theme.SpaceMD;
 
-            MakeFieldLabel(lblCoverUrl, "COVER URL", m, y); y += Theme.SpaceSM + 2;
-            MakeTextBox(txtCoverUrl, m, y, w, 38); y += 38 + Theme.SpaceMD;
+            MakeFieldLabel(lblCoverUrl, "COVER URL", margin, positionY); positionY += Theme.SpaceSM + 2;
+            MakeTextBox(txtCoverUrl, margin, positionY, cardWidth, 38); positionY += 38 + Theme.SpaceMD;
 
             // Price + Stock row
-            int colW = (w - Theme.SpaceSM) / 2;
-            MakeFieldLabel(lblPrice, "HARGA (Rp)", m,           y);
-            MakeFieldLabel(lblStock, "STOK",        m + colW + Theme.SpaceSM, y);
-            y += Theme.SpaceSM + 2;
+            int columnWidth = (cardWidth - Theme.SpaceSM) / 2;
+            MakeFieldLabel(lblPrice, "HARGA (Rp)", margin,           positionY);
+            MakeFieldLabel(lblStock, "STOK",        margin + columnWidth + Theme.SpaceSM, positionY);
+            positionY += Theme.SpaceSM + 2;
 
-            this.numPrice.Location         = new Point(m, y);
-            this.numPrice.Size             = new Size(colW, 38);
+            this.numPrice.Location         = new Point(margin, positionY);
+            this.numPrice.Size             = new Size(columnWidth, 38);
             this.numPrice.Maximum          = 10000000M;
             this.numPrice.Increment        = 1000M;
             this.numPrice.ThousandsSeparator = true;
             Theme.ApplyToNumericUpDown(this.numPrice);
 
-            this.numStock.Location = new Point(m + colW + Theme.SpaceSM, y);
-            this.numStock.Size     = new Size(colW, 38);
+            this.numStock.Location = new Point(margin + columnWidth + Theme.SpaceSM, positionY);
+            this.numStock.Size     = new Size(columnWidth, 38);
             this.numStock.Maximum  = 100000M;
             Theme.ApplyToNumericUpDown(this.numStock);
-            y += 38 + Theme.SpaceLG;
+            positionY += 38 + Theme.SpaceLG;
 
             // Buttons
             this.btnSave.Text         = "Simpan";
-            this.btnSave.Size         = new Size(colW, 48);
-            this.btnSave.Location     = new Point(m, y);
+            this.btnSave.Size         = new Size(columnWidth, 48);
+            this.btnSave.Location     = new Point(margin, positionY);
             this.btnSave.Font         = Theme.FontSubhead;
             this.btnSave.CornerRadius = Theme.RadiusButton;
             Theme.ApplyToButton(this.btnSave);
             this.btnSave.Click       += BtnSave_Click;
 
             this.btnCancel.Text         = "Batal";
-            this.btnCancel.Size         = new Size(colW, 48);
-            this.btnCancel.Location     = new Point(m + colW + Theme.SpaceSM, y);
+            this.btnCancel.Size         = new Size(columnWidth, 48);
+            this.btnCancel.Location     = new Point(margin + columnWidth + Theme.SpaceSM, positionY);
             this.btnCancel.Font         = Theme.FontSubhead;
             this.btnCancel.CornerRadius = Theme.RadiusButton;
             Theme.ApplyToSecondaryButton(this.btnCancel);
@@ -167,20 +167,20 @@ namespace WinformsGUI.Views.Book
             ((System.ComponentModel.ISupportInitialize)(this.numStock)).EndInit();
         }
 
-        private void MakeFieldLabel(Label lbl, string text, int x, int y)
+        private void MakeFieldLabel(Label lbl, string text, int positionX, int positionY)
         {
             lbl.Text      = text;
             lbl.Font      = Theme.FontLabel;
             lbl.ForeColor = Theme.TextMuted;
             lbl.BackColor = Color.Transparent;
             lbl.AutoSize  = true;
-            lbl.Location  = new Point(x, y);
+            lbl.Location  = new Point(positionX, positionY);
         }
 
-        private void MakeTextBox(TextBox txt, int x, int y, int w, int h)
+        private void MakeTextBox(TextBox txt, int positionX, int positionY, int width, int height)
         {
-            txt.Location    = new Point(x, y);
-            txt.Size        = new Size(w, h);
+            txt.Location    = new Point(positionX, positionY);
+            txt.Size        = new Size(width, height);
             txt.BorderStyle = BorderStyle.FixedSingle;
             txt.BackColor   = Theme.BgInput;
             txt.ForeColor   = Theme.TextPrimary;
