@@ -35,6 +35,9 @@ public class TalkshowService : ITalkshowService
 
     public async Task<Talkshow> CreateTalkshowAsync(Talkshow talkshow)
     {
+        talkshow.StartTime = talkshow.StartTime.ToUniversalTime();
+        talkshow.EndTime = talkshow.EndTime.ToUniversalTime();
+
         if (talkshow.EndTime <= talkshow.StartTime)
             throw new ArgumentException("End time must be after start time.");
 
@@ -63,8 +66,8 @@ public class TalkshowService : ITalkshowService
         talkshow.SpeakerName = updated.SpeakerName;
         talkshow.SpeakerBio  = updated.SpeakerBio;
         talkshow.Venue       = updated.Venue;
-        talkshow.StartTime   = updated.StartTime;
-        talkshow.EndTime     = updated.EndTime;
+        talkshow.StartTime   = updated.StartTime.ToUniversalTime();
+        talkshow.EndTime     = updated.EndTime.ToUniversalTime();
         talkshow.MaxCapacity = updated.MaxCapacity;
         talkshow.Status      = updated.Status;
         talkshow.UpdatedAt   = DateTime.UtcNow;
